@@ -1,0 +1,3 @@
+sicklms/port: /dev/ttyS0
+sicklms/baud: 38400
+sicklms/scan_rate: 75.0

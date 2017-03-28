@@ -1,0 +1,66 @@
+<robot>
+  <material name="blue">
+    <color rgba="0.25 0.55 1.0 1.0"/>
+  </material>
+
+  <link name="laser_mount">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
+      <geometry>
+        <mesh filename="package://building_mapper/urdf/meshes/SICK_LM200-LM291_MOUNT.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+  <joint name="sick_lm200-lm291_mount_joint" type="fixed">
+    <parent link="front_mount"/>
+    <child link="laser_mount"/>
+    <origin xyz="-0.091 0 0" rpy="0 0 0"/>
+  </joint>
+  <gazebo reference="laser_mount">
+    <material name="black"/>
+  </gazebo>
+
+  <link name="laser">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
+      <geometry>
+        <mesh filename="package://building_mapper/urdf/meshes/SICK_LM200-LM291.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <inertial>
+      <mass value="4.5"/>
+      <inertia ixx="0.025664" ixy="0.0" ixz="0.0" iyy="0.018135" iyz="0.0" izz="0.025547"/>
+    </inertial>
+    <sensor type="ray" name="sick_lm200-lm291">
+      <update_rate>75</update_rate>
+      <ray>
+        <horizontal>
+          <samples>181</samples>
+          <resolution>1</resolution>
+          <min_angle>{-PI/2}</min_angle>
+          <max_angle>{PI/2}</max_angle>
+        </horizontal>
+        <range>
+          <min>0.10</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <!-- <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.001</stddev>
+        </noise> -->
+      </ray>
+    </sensor>
+  </link>
+  <joint name="sick_lm2xx_lidar_joint" type="fixed">
+    <parent link="laser_mount"/>
+    <child link="laser"/>
+    <origin xyz="0.0935 0 0.079" rpy="0 0 0"/>
+  </joint>
+  <gazebo reference="laser">
+    <material name="blue"/>
+  </gazebo>
+</robot>
