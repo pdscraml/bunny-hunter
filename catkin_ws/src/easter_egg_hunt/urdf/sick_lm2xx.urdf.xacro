@@ -7,7 +7,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
-        <mesh filename="package://building_mapper/urdf/meshes/SICK_LM200-LM291_MOUNT.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://easter_egg_hunt/urdf/meshes/SICK_LM200-LM291_MOUNT.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -25,7 +25,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
-        <mesh filename="package://building_mapper/urdf/meshes/SICK_LM200-LM291.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://easter_egg_hunt/urdf/meshes/SICK_LM200-LM291.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="blue"/>
     </visual>
