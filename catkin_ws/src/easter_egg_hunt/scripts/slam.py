@@ -41,9 +41,11 @@ class slam(object):
 
             # # push Twist msgs to override Callback algorithm
             # self.motion.linear.x = loop_counter/200.0
-            self.motion.linear.x = 0.4 
+            self.motion.linear.x = 0.4
             # self.motion.angular.z = 0.4
-            self.motion.angular.z = 1/loop_counter
+            self.motion.angular.z = 2.0/loop_counter
+
+            rospy.loginfo(self.motion.angular.z)
 
             # publish Twist
             pub.publish(self.motion)
