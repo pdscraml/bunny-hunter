@@ -40,8 +40,10 @@ class slam(object):
             # rate = rospy.Rate(100.0/counter)
 
             # # push Twist msgs to override Callback algorithm
-            self.motion.linear.x = loop_counter/100.0
-            self.motion.angular.z = 0.4
+            # self.motion.linear.x = loop_counter/200.0
+            self.motion.linear.x = 0.4 
+            # self.motion.angular.z = 0.4
+            self.motion.angular.z = 1/loop_counter
 
             # publish Twist
             pub.publish(self.motion)
@@ -66,3 +68,4 @@ if __name__ == "__main__":
         move = slam()
     except rospy.ROSInterruptException:
         pass
+
