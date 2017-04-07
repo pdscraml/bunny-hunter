@@ -33,7 +33,8 @@ class slam(object):
         rospy.init_node("slam")
 
         # subscribe to twist_key
-        rospy.Subscriber("/front/scan", LaserScan, self.Callback)
+        # rospy.Subscriber("/front/scan", LaserScan, self.Callback)
+        rospy.Subscriber("/scan", LaserScan, self.Callback)
         rate = rospy.Rate(10)
 
         # publish to cmd_vel of the jackal

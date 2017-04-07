@@ -1,9 +1,8 @@
 <launch>
- 
+
   <include file="$(find easter_egg_hunt)/launch/jackal.launch" />
+  <include file="$(find jackal_control)/launch/control.launch" />
 
   <node pkg="easter_egg_hunt" name="slam" type="slam.py"  output="screen" required="true"/>
-
-  <!-- <node pkg="rosbag" type="record" name="explore_bag" args="-O $(find building_mapper)/rosbag/rosbag /scan /tf" /> -->
 
 </launch>
