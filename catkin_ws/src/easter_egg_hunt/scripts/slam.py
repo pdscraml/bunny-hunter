@@ -22,7 +22,7 @@ from sensor_msgs.msg import LaserScan
 class slam(object):
     # define setup and run routine
     def __init__(self):
-
+        # user variables
         self.motion = Twist()
         self.wall_found = 0
         self.loop_counter = 1
@@ -40,6 +40,12 @@ class slam(object):
         # publish to cmd_vel of the jackal
         pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         while not rospy.is_shutdown():
+
+            rospy.loginfo('spiral..')
+            self.motion.linear.x = 0.4
+            self.motion.angular.z = math.exp(-self.loop_counter/75.0)
+            rospy.loginfo(self.motion.linear.x)
+            rospy.loginfo(self.motion.angular.z)
 
             # publish Twist
             pub.publish(self.motion)

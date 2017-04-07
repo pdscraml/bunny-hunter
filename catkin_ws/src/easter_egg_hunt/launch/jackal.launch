@@ -5,5 +5,5 @@
 
   <!-- <include file="$(find jackal_control)/launch/control.launch" /> -->
 
-  <!-- <include file="$(find building_mapper)/launch/sicklms.launch" /> -->
+  <include file="$(find building_mapper)/launch/sicklms.launch" />
 </launch>
