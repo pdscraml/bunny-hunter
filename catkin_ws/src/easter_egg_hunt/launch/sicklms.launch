@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Launch sicklms node from sicktoolbox_wrapper -->
-  <rosparam file="$(find building_mapper)/config/sicklms_params.yaml" command="load" />
+  <rosparam file="$(find easter_egg_hunt)/config/sicklms_params.yaml" command="load" />
   <node name="sicklms" pkg="sicktoolbox_wrapper" type="sicklms" required="true"/>
 
 </launch>
