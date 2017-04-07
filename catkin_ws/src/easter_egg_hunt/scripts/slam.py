@@ -14,7 +14,7 @@ import sys
 import time
 import roslaunch
 import os
-
+import math
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 
@@ -24,33 +24,27 @@ class slam(object):
     def __init__(self):
 
         self.motion = Twist()
+        self.wall_found = 0
+        self.loop_counter = 1
+        self.direction = 0
+        self.closest_value = 0.0
 
         # create node for listening to twist messages
         rospy.init_node("slam")
 
         # subscribe to twist_key
-        rospy.Subscriber("/scan", LaserScan, self.Callback)
+        rospy.Subscriber("/front/scan", LaserScan, self.Callback)
         rate = rospy.Rate(10)
 
-        loop_counter = 1
         # publish to cmd_vel of the jackal
         pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         while not rospy.is_shutdown():
 
-            # rate = rospy.Rate(100.0/counter)
-
-            # # push Twist msgs to override Callback algorithm
-            # self.motion.linear.x = loop_counter/200.0
-            self.motion.linear.x = 0.4
-            # self.motion.angular.z = 0.4
-            self.motion.angular.z = 2.0/loop_counter
-
-            rospy.loginfo(self.motion.angular.z)
-
             # publish Twist
             pub.publish(self.motion)
 
-            loop_counter += 1
+            self.loop_counter += 1
+            # self.wall_found = 0
 
             rate.sleep()
 
@@ -58,10 +52,38 @@ class slam(object):
     # motion algorithm in Callback routine for Jackal motion
     def Callback(self, data):
 
-        # move forward
-        rospy.loginfo('publishing to /cmd_vel..\n')
-        self.motion.linear.x  = 1
-        self.motion.angular.z = 1
+        # if wall found
+        if (min(data.ranges) < 1.5) :
+            self.motion.linear.x  = 0
+            self.motion.angular.z  = 0
+
+            # go towards the wall
+            self.get_direction(data)
+            rospy.loginfo(self.direction)
+
+            # rospy.loginfo('going towards wall..')
+            # self.motion.linear.x  = 1
+            # self.motion.angular.z  = 0
+
+            # stop if too close to the wall
+            # if (min(data.ranges) < 0.5) :
+            #     # stop
+            #     self.motion.linear.x  = 0
+            #     self.motion.angular.z  = 0
+
+        # if wall not found
+        else :
+            # move in a spiral to minimize the time to find a wall
+            rospy.loginfo('spiral..')
+            self.motion.linear.x = 0.4
+            self.motion.angular.z = math.exp(-self.loop_counter/75.0)
+            rospy.loginfo(self.motion.linear.x)
+            rospy.loginfo(self.motion.angular.z)
+
+
+    def get_direction(self, data):
+        self.closest_value = min(data.ranges)
+        self.direction = data.ranges.index(self.closest_value)
 
 
 # standard ros boilerplate
