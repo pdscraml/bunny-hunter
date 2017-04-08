@@ -9,4 +9,4 @@ else
 fi
 
 package_path="$(echo $ROS_PACKAGE_PATH | cut -d":" -f1)"
-export JACKAL_URDF_EXTRAS="$package_path/easter_egg_hunt/urdf/sick_lm2xx.urdf.xacro"
+export JACKAL_URDF_EXTRAS="$package_path/easter_egg_hunt/urdf/loadout.urdf.xacro"

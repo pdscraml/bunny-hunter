@@ -63,4 +63,22 @@
   <gazebo reference="laser">
     <material name="blue"/>
   </gazebo>
+
+  <link name="head_camera">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.025" radius="0.01"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+  <joint name="camera" type="fixed">
+    <parent link="laser"/>
+    <child link="head_camera"/>
+    <origin xyz="0.045 0 0.15" rpy="0 ${PI/2} 0"/>
+  </joint>
+  <gazebo reference="head_camera">
+    <material name="black"/>
+  </gazebo>
 </robot>
