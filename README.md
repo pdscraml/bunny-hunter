@@ -1,5 +1,4 @@
-# bunny-hunter
-## Final Project: Jackals hunt rabbits right?
+# Final Project: Jackals hunt rabbits right?
 
 - Map a room or other enclosed area
 - Explore the map looking for bunnies, each will have an associated Alvar marker.
@@ -28,3 +27,7 @@
 - [Ian Wakely](https://github.com/raveious)
 - [Akhil Kurup](https://github.com/amkurup)
 - [Phillip Scramlin](https://github.com/pdscraml) (Project Leader)
+
+# Calibration
+
+The PlayStation3 Eye camera was calibrated using [this tutorial](http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration).
