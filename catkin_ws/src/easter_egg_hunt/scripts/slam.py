@@ -55,22 +55,12 @@ class slam(object):
 
         # if wall found
         if (min(data.ranges) < 1.5) :
-            self.motion.linear.x  = 0
+            self.motion.linear.x  = 0.4
             self.motion.angular.z  = 0
 
             # go towards the wall
             self.get_direction(data)
             rospy.loginfo(self.direction)
-
-            # rospy.loginfo('going towards wall..')
-            # self.motion.linear.x  = 1
-            # self.motion.angular.z  = 0
-
-            # stop if too close to the wall
-            # if (min(data.ranges) < 0.5) :
-            #     # stop
-            #     self.motion.linear.x  = 0
-            #     self.motion.angular.z  = 0
 
         # if wall not found
         else :
