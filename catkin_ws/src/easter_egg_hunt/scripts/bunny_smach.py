@@ -3,42 +3,16 @@
 # Intro to Robotics - EE5900 - Spring 2017
 #             Final Project
 #          Philip (Team Lead)
-#               Ian
-#              Akhil
+#                 Ian
+#                Akhil
 #
-# Revision: v1.1
+# Revision: v1.2
 
 # imports
 import rospy
 import smach
 import smach_ros
 import egg_detect
-
-# define state img_proc
-class img_proc(smach.State):
-    def __init__(self):
-        smach.State.__init__(self,
-                             # 0 -> busy; 1 -> completed
-                             outcomes=['0','1'],
-                             input_keys=[''],
-                             output_keys=['']
-                             )
-
-    def execute(self, userdata):
-        rospy.loginfo('Executing img proc..')
-
-        # define flag to check status
-        self.done = 0
-
-        # invoke egg detection routine
-        egg_detect.bunny_egg_detect()
-
-        # return complete status
-        if self.done:
-            return '1'
-        else:
-            return '0'
-
 
 def main():
     rospy.init_node('master_state_machine')
@@ -49,7 +23,7 @@ def main():
     # Open the container
     with sm:
         # Add states to the container
-        smach.StateMachine.add('Egg_Detect', img_proc(),
+        smach.StateMachine.add('Egg_Detect', egg_detect.bunny_egg_detect(),
                                transitions={'0':'',
                                             '1':''}
                               )

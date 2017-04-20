@@ -6,7 +6,7 @@
 #               Ian
 #              Akhil
 #
-# Revision: v1.3
+# Revision: v1.4
 
 # imports
 import rospy
@@ -14,19 +14,25 @@ import sys
 import time
 import roslaunch
 import os
-import argparse
 import cv_bridge
 import cv2
+import smach
+import smach_ros
 import numpy as np
 from sensor_msgs.msg import Image
 
-global sub
 
-# defining class for discrete movement algorithm
-class bunny_egg_detect(object):
-
-    # define setup and run routine
+# defining class for egg detection
+class bunny_egg_detect(smach.State):
+    # init state machine
     def __init__(self):
+        smach.State.__init__(self, outcomes=['0','1'])
+
+    # define executation stage
+    def execute(self, userdata):
+        # init status variable
+        self.done = 0
+
         # cvBridge is a ROS library that provides an interface between ROS
         # and OpenCV.
         self.bridge = cv_bridge.CvBridge()
@@ -36,11 +42,16 @@ class bunny_egg_detect(object):
         # subscribe to raw images
         self.sub = rospy.Subscriber("/usb_cam/image_raw", Image, self.Callback)
         # msg = rospy.wait_for_message("my_topic", MyType)
-        rate = rospy.Rate(0.1)
+        rate = rospy.Rate(1)
 
         while not rospy.is_shutdown():
-
             rate.sleep()
+
+        # complete?
+        if self.done:
+            return '1'
+        else:
+            return '0'
 
 
     # egg detection algorithm
@@ -54,7 +65,6 @@ class bunny_egg_detect(object):
         # imgmsg_to_cv2 converts an image message pointer to an OpenCV
         # message.
         image = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
-
         # cv2.imshow("results", image)
         # cv2.waitKey(0)
 
@@ -83,24 +93,24 @@ class bunny_egg_detect(object):
             # Median Blurring to remove Salt-Pepper noise
             blur_img = cv2.medianBlur(output,9)
             blur_img = cv2.medianBlur(blur_img,9)
-            cv2.imshow("results", blur_img)
-            cv2.waitKey(0)
+            # cv2.imshow("results", blur_img)
+            # cv2.waitKey(0)
 
             # convert to gray-scale to eliminate lighting effects
             gray = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
-            cv2.imshow("results", gray)
-            cv2.waitKey(0)
+            # cv2.imshow("results", gray)
+            # cv2.waitKey(0)
 
             # apply thresholding to define gradients
             ret, thresh = cv2.threshold(gray,10,255,0)
-            cv2.imshow("results", thresh)
-            cv2.waitKey(0)
+            # cv2.imshow("results", thresh)
+            # cv2.waitKey(0)
 
             # define and draw contours around detected objects
             contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             cv2.drawContours(blur_img, contours, -1, (0,255,0), 3)
-            cv2.imshow("results", blur_img)
-            cv2.waitKey(0)
+            # cv2.imshow("results", blur_img)
+            # cv2.waitKey(0)
 
             # Display color's and number of eggs:
             if i==0:
@@ -119,14 +129,6 @@ class bunny_egg_detect(object):
 
             i += 1
 
+        # stop subscription
         self.sub.unregister()
-        # self.done = 1
-
-
-# standard ros boilerplate
-if __name__ == "__main__":
-    try:
-        cv = bunny_egg_detect()
-    except rospy.ROSInterruptException:
-        pass
-
+        self.done = 1
