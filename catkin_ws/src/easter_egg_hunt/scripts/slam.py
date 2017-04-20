@@ -19,7 +19,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 
 # defining class for discrete movement algorithm
-class slam(object):
+class bunny_slam(object):
     # define setup and run routine
     def __init__(self):
         # user variables
@@ -80,7 +80,7 @@ class slam(object):
 # standard ros boilerplate
 if __name__ == "__main__":
     try:
-        move = slam()
+        move = bunny_slam()
     except rospy.ROSInterruptException:
         pass
 
