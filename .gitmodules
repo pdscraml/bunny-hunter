@@ -1,3 +1,0 @@
-[submodule "catkin_ws/src/jackal"]
-	path = catkin_ws/src/jackal
-	url = https://github.com/jackal/jackal.git
