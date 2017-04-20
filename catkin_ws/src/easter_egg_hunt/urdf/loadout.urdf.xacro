@@ -64,7 +64,7 @@
     <material name="blue"/>
   </gazebo>
 
-  <link name="head_camera">
+  <link name="head_camera_temp">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -73,12 +73,20 @@
       <material name="black"/>
     </visual>
   </link>
-  <joint name="camera" type="fixed">
+  <joint name="camera_temp" type="fixed">
     <parent link="laser"/>
-    <child link="head_camera"/>
+    <child link="head_camera_temp"/>
     <origin xyz="0.045 0 0.15" rpy="0 ${PI/2} 0"/>
   </joint>
   <gazebo reference="head_camera">
     <material name="black"/>
   </gazebo>
+
+  <link name="head_camera">
+  </link>
+  <joint name="camera" type="fixed">
+    <parent link="head_camera_temp"/>
+    <child link="head_camera"/>
+    <origin xyz="0 0 0" rpy="0 0 ${-PI/2}"/>
+  </joint>
 </robot>
