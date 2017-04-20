@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 # Intro to Robotics - EE5900 - Spring 2017
-#             Final Project
+#            Final Project
 #          Philip (Team Lead)
 #               Ian
 #              Akhil
 #
-# Revision: v1.2
-
+# Revision: v1.3
 
 # imports
 import rospy
@@ -16,33 +15,54 @@ import time
 import roslaunch
 import os
 import argparse
+import cv_bridge
 import cv2
 import numpy as np
+from sensor_msgs.msg import Image
 
+global sub
 
 # defining class for discrete movement algorithm
-class egg_detect(object):
+class bunny_egg_detect(object):
 
     # define setup and run routine
     def __init__(self):
+        # cvBridge is a ROS library that provides an interface between ROS
+        # and OpenCV.
+        self.bridge = cv_bridge.CvBridge()
+        # create node for listening to twist messages
+        # rospy.init_node("egg_detect")
 
-        # construct and parse the arguments
-        ap = argparse.ArgumentParser()
-        ap.add_argument("-i", "--image", help = "path to the image")
-        args = vars(ap.parse_args())
+        # subscribe to raw images
+        self.sub = rospy.Subscriber("/usb_cam/image_raw", Image, self.Callback)
+        # msg = rospy.wait_for_message("my_topic", MyType)
+        rate = rospy.Rate(0.1)
+
+        while not rospy.is_shutdown():
+
+            rate.sleep()
+
+
+    # egg detection algorithm
+    def Callback(self, data):
+        # iterator variable
+        i = 0
 
         # define window
         cv2.namedWindow("results", cv2.WINDOW_NORMAL)
         # load the image
-        image = cv2.imread(args["image"])
+        # imgmsg_to_cv2 converts an image message pointer to an OpenCV
+        # message.
+        image = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
 
-        i = 0
+        # cv2.imshow("results", image)
+        # cv2.waitKey(0)
 
         # define the list of boundaries
-        boundaries = [([40,  210, 230], [90,  235, 255]), # yellow
-                      ([150, 90,  10],  [200, 120, 30]),  # blue
+        boundaries = [([70,  170, 180], [130, 215, 225]), # yellow
+                      ([170, 60,  01],  [225, 110, 20]),  # blue
                       ([65,  125, 25],  [125, 210, 120]), # green
-                      ([35,  45,  200], [80,  100, 255]), # orange
+                      ([15,  100, 160], [30,  130, 225]), # orange
                       ([50,  05,  110], [120, 70,  255])] # red
 
         # loop over the boundaries
@@ -57,23 +77,30 @@ class egg_detect(object):
             output = cv2.bitwise_and(image, image, mask = mask)
 
             img = output
+            # cv2.imshow("results", output)
+            # cv2.waitKey(0)
 
             # Median Blurring to remove Salt-Pepper noise
             blur_img = cv2.medianBlur(output,9)
             blur_img = cv2.medianBlur(blur_img,9)
+            cv2.imshow("results", blur_img)
+            cv2.waitKey(0)
 
             # convert to gray-scale to eliminate lighting effects
             gray = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
+            cv2.imshow("results", gray)
+            cv2.waitKey(0)
 
             # apply thresholding to define gradients
             ret, thresh = cv2.threshold(gray,10,255,0)
+            cv2.imshow("results", thresh)
+            cv2.waitKey(0)
 
             # define and draw contours around detected objects
             contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             cv2.drawContours(blur_img, contours, -1, (0,255,0), 3)
-
-            # cv2.imshow("results", blur_img)
-            # cv2.waitKey(0)
+            cv2.imshow("results", blur_img)
+            cv2.waitKey(0)
 
             # Display color's and number of eggs:
             if i==0:
@@ -92,11 +119,14 @@ class egg_detect(object):
 
             i += 1
 
+        self.sub.unregister()
+        # self.done = 1
+
 
 # standard ros boilerplate
 if __name__ == "__main__":
     try:
-        cv = egg_detect()
+        cv = bunny_egg_detect()
     except rospy.ROSInterruptException:
         pass
 
