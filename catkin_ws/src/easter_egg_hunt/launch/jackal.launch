@@ -3,6 +3,6 @@
     <arg name="config" value="base" />
   </include>
 
-  <include file="$(find easter_egg_hunt)/launch/sicklms.launch" />
-  <include file="$(find easter_egg_hunt)/launch/usb_cam.launch" />
+  <include file="$(find easter_egg_hunt)/launch/include/sicklms.launch" />
+  <include file="$(find easter_egg_hunt)/launch/include/usb_cam.launch" />
 </launch>
