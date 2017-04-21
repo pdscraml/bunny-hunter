@@ -3,6 +3,11 @@
     <arg name="config" value="base" />
   </include>
 
+  <!-- sensors -->
   <include file="$(find easter_egg_hunt)/launch/include/sicklms.launch" />
   <include file="$(find easter_egg_hunt)/launch/include/usb_cam.launch" />
+
+  <!-- other services -->
+  <include file="$(find easter_egg_hunt)/launch/include/ar.launch" />
+  <include file="$(find easter_egg_hunt)/launch/include/navigation.launch" />
 </launch>
