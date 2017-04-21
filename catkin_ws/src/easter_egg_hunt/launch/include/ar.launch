@@ -1,6 +1,6 @@
 <launch>
   <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
-    <param name="marker_size"           type="double" value="12.7" />
+    <param name="marker_size"           type="double" value="12" />
     <param name="max_new_marker_error"  type="double" value="0.08" />
     <param name="max_track_error"       type="double" value="0.2" />
     <param name="output_frame"          type="string" value="head_camera" />
