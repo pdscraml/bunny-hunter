@@ -13,6 +13,7 @@ import rospy
 import smach
 import smach_ros
 import egg_detect
+import joystick
 
 def main():
     rospy.init_node('master_state_machine')
@@ -23,10 +24,11 @@ def main():
     # Open the container
     with sm:
         # Add states to the container
+        smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause(0), # X
+                               transitions={'BUTTON_PRESSED':'Egg_Detect'})
         smach.StateMachine.add('Egg_Detect', egg_detect.bunny_egg_detect(),
                                transitions={'0':'',
-                                            '1':''}
-                              )
+                                            '1':''})
 
     # Execute SMACH plan
     outcome = sm.execute()
