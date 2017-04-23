@@ -35,10 +35,26 @@ class WaypointManager(object):
         if self.tf_list.canTransform('map', 'head_camera', rospy.Time(0)):
             pose_st = PoseStamped()
             pose_st = marker.pose
-            pose_st.pose.orientation.x = 0
-            pose_st.pose.orientation.z = 0
-            pose_st.pose.orientation.w = pose_st.pose.orientation.y
+
+            quat = (pose_st.pose.orientation.x,
+                    pose_st.pose.orientation.y,
+                    pose_st.pose.orientation.z,
+                    pose_st.pose.orientation.w)
+
+            (roll, pitch, yaw) = (tf.transformations.euler_from_quaternion(quat))
+            converted = tf.transformations.quaternion_from_euler(3.14159, pitch - 1.570796327, 0.0)
+
+            pose_st.pose.orientation.x = converted[0]
+            pose_st.pose.orientation.y = converted[1]
+            pose_st.pose.orientation.z = converted[2]
+            pose_st.pose.orientation.w = converted[3]
+
+            # pose_st.pose.position.x = pose_st.pose.position.x - self.marker_distance * converted[0]
+            # pose_st.pose.position.y = pose_st.pose.position.y - self.marker_distance * converted[1]
+            pose_st.pose.position.z = pose_st.pose.position.z - self.marker_distance# * converted[2]
+
             pose_st.header.frame_id = 'head_camera'
+            print(pose_st)
 
             transd_pose = self.tf_list.transformPose("map", pose_st)
 
