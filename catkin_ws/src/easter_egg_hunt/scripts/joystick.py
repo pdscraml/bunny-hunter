@@ -7,18 +7,29 @@ from sensor_msgs.msg import Joy
 
 class JoystickButtonPause(smach.State):
     def __init__(self, topic, button, timeout=None):
-        super(JoystickPause, self).__init__(outcomes=['BUTTON_PRESSED', 'BUTTON_NEVER_PRESSED'])
+        super(JoystickButtonPause, self).__init__(outcomes=['BUTTON_PRESSED', 'BUTTON_NEVER_PRESSED'])
         self.button_pause = button
+        self.topic = topic
         self.timeout = timeout
 
     def execute(self, userdata):
         while not rospy.is_shutdown():
             try:
-                payload = rospy.wait_for_message(self.topic, Joy, self.timeout)
-            except ROSException, ROSInterruptException as e:
-                pass
+                payload = rospy.wait_for_message(self.topic, Joy, timeout=self.timeout)
 
-            if payload[self.button_pause]:
-                return 'BUTTON_PRESSED'
+                if payload.buttons[self.button_pause]:
+                    return 'BUTTON_PRESSED'
+            except (rospy.ROSException, rospy.ROSInterruptException) as e:
+                rospy.logwarn(e)
+                continue
 
         return 'BUTTON_NEVER_PRESSED'
+
+# standard ros boilerplate
+if __name__ == "__main__":
+    try:
+        rospy.init_node('joystick_state')
+        joy = JoystickButtonPause('/bluetooth_teleop/joy', 0)
+        joy.execute([])
+    except rospy.ROSInterruptException:
+        pass
