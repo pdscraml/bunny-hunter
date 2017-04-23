@@ -11,6 +11,7 @@
 # imports
 import rospy
 import actionlib
+import random
 import sys
 import time
 import roslaunch
@@ -29,7 +30,7 @@ from geometry_msgs.msg import Twist
 class wallFollow(smach.State):
     # init state machine
     def __init__(self):
-        smach.State.__init__(self, outcomes=['0','1'])
+        smach.State.__init__(self, outcomes=['EXPLORATION_COMPLETE','EXPLORATION_INCOMPLETE'])
 
     # define executation stage
     def execute(self, userdata):
@@ -39,21 +40,31 @@ class wallFollow(smach.State):
         self.j = 0
 
         # define speed and turning coefficients
-        self.turnCoef = [(x ** 2 - 8100) / 10000000.0 for x in range(-90, 0)] + [(-x ** 2 + 8100) / 10000000.0 for x in range(0, 91)]
-        self.speedCoef = [(-x ** 2 + 8100) / 10000000.0 for x in range(-90,91)]
+        self.turnCoef = [(x ** 2 - 9000) / 5000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 9000) / 5000000.0 for x in xrange(0, 91)]
+        self.speedCoef = [(-x ** 2 + 9900) / 7500000.0 for x in xrange(-90,91)]
 
         # subscribers and publishers
         rospy.Subscriber("/scan", LaserScan, self.function)
-        # rospy.Subscriber("", , self.jackalSpin)
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
 
         rospy.spin()
 
         # complete?
         if self.done:
-            return '1'
+            return 'EXPLORATION_COMPLETE'
         else:
-            return '0'
+            return 'EXPLORATION_INCOMPLETE'
+
+
+    # function to switch between states
+    def function(self, data):
+        self.i += 1
+        if self.i > random.randrange(90, 100):
+            self.jackalSpin(data)
+            # self.Callback(data)
+        else:
+            self.Callback(data)
+
 
     # spin jackal 360 deg
     def jackalSpin(self, data):
@@ -62,16 +73,9 @@ class wallFollow(smach.State):
         self.cmd.angular.z = 0.45
         self.pub.publish(self.cmd)
         self.j += 1
-        if self.j > 132:
+        if self.j > 130:
             self.i = 0
 
-    # function to switch between states
-    def function(self, data):
-        self.i += 1
-        if self.i > 50:
-            self.jackalSpin(data)
-        else:
-            self.Callback(data)
 
     def Callback(self, data):
         # define initial varibles
@@ -88,16 +92,16 @@ class wallFollow(smach.State):
 
         # If average is really REALLY close, might want to back up instead
         if front_zone_avg < 1 or min(front_zone) < 0.6:
-            # speedVal = -0.1
+            speedVal = -0.1
             if left_zone_avg > right_zone_avg and min(left_zone) > min(right_zone):
-                rospy.loginfo("Backing up to the left...")
-                turnVal = 0.5
+                # rospy.loginfo("Backing up to the left...")
+                turnVal = 0.4
             else:
-                rospy.loginfo("Backing up to the right...")
-                turnVal = -0.3
+                # rospy.loginfo("Backing up to the right...")
+                turnVal = -0.4
 
         else:
-            rospy.loginfo("Normal hallway")
+            # rospy.loginfo("Normal hallway")
             for p in range(0, 181):
                 # Inf range return means its over 10m from the LIDAR
                 if math.isinf(data.ranges[p]) or math.isnan(data.ranges[p]):
@@ -109,12 +113,18 @@ class wallFollow(smach.State):
                     # Turn away from walls
                     turnVal = turnVal + (self.turnCoef[p] * data.ranges[p])
 
-            speedVal = min(speedVal * 1.2, 0.4) # sets max speed
-            turnVal = turnVal * 1.4
+            speedVal = min(speedVal * 1.2, 0.35) # sets max speed
+            turnVal = turnVal * 1.5
 
-            if front_zone_avg < 2.0:
+            if front_zone_avg < 2.2:
                 turnVal = turnVal * 2.0
                 speedVal = speedVal * 1.1
+
+        # rospy.loginfo('left_zone_avg:'+str(left_zone_avg))
+        # rospy.loginfo('right_zone_avg:'+str(right_zone_avg))
+
+        rospy.loginfo('SpeedVal: ' + str(speedVal))
+        rospy.loginfo('turnVal: ' + str(turnVal))
 
         self.cmd = Twist()
         self.cmd.linear.x = speedVal
