@@ -23,6 +23,52 @@
 - Points given for style and creativity.
 - Sequential behavior should be enabled using 'smach'.
 
+
+## Current Progress
+
+##### State Machine (PUTTING IT ALL TOGETHER)
+- [x] Joystick control
+- [x] Master State Machine (calls upper states)
+- [ ] Build entire skeleton framework of state machine, then work through each individual module
+- [ ] Convert Compeleted Modules to Compatible State Machine “Form”
+
+#### Exploration
+- [x] Basic Exploration
+- [ ] Fine-tune Random/Intelligent Spins
+- [ ] Exploration Jerkiness, from map?
+  - Fine-tune gmapping? (i.e. refresh rate)
+
+##### Map-server
+- [ ] Can be run on Jackal?
+- [ ] Launch on Jackal.launch
+
+#### Check Map Completeness
+- [ ] Define threshold and Map "Completeness"
+- [ ] Processor Intensive?  Reduce bottlenecks/complexity
+
+##### Easter Basket Hunting
+- [x] Basic Ar Tracker
+- [x] Waypoint on marker
+- [ ] Needs offset from marker
+- [ ] Filter orientation to 2D
+- [x] Egg Detection
+
+#### Navigation
+- [x] Navigation Stack
+
+#### Action Library
+- [ ] Wait for goal complete, define state completeness for state transition
+- See its usage in the [congenial-couscous](https://github.com/RogerGomes29/congenial-couscous) repository.
+
+## Final Testing Checklist
+- [ ] Optimize time
+- [ ] Explore without jerkiness or collisions
+- [ ] Able to complete full map
+- [ ] State Machine performance (Changing state when desired)
+- [ ] Able to discover and save WP
+- [ ] Able to return to WP
+- [ ] Able to count eggs at WP
+
 ## Team
 - [Ian Wakely](https://github.com/raveious)
 - [Akhil Kurup](https://github.com/amkurup)

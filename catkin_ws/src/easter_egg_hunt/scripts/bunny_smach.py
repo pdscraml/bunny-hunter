@@ -26,11 +26,14 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
-                               transitions={'BUTTON_PRESSED':'Egg_Detect', 'BUTTON_NEVER_PRESSED': '0'})
+                               transitions={'BUTTON_PRESSED':'Exploration',
+                                            'BUTTON_NEVER_PRESSED': '0'})
+
+        smach.StateMachine.add('Exploration', wall_follow.wallFollow(),
+                               transitions={'EXPLORATION_COMPLETE':'Egg_Detect',
+                                            'EXPLORATION_INCOMPLETE':'0'})
+
         smach.StateMachine.add('Egg_Detect', egg_detect.bunny_egg_detect(),
-                               transitions={'0':'',
-                                            '1':''})
-        smach.StateMachine.add('Explore', wall_follow.wallFollow(),
                                transitions={'0':'',
                                             '1':''})
 
