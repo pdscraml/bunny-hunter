@@ -2,6 +2,7 @@
 
   <include file="$(find easter_egg_hunt)/launch/jackal.launch" />
 
-  <node pkg="easter_egg_hunt" name="slam" type="slam.py"  output="screen" required="true"/>
+  <node pkg="easter_egg_hunt" name="discovery" type="discovery.py"  output="screen" required="true"/>
+  <node pkg="easter_egg_hunt" name="bunny_smach" type="bunny_smach.py"  output="screen" required="true"/>
 
 </launch>
