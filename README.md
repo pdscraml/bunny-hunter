@@ -23,8 +23,12 @@
 - Points given for style and creativity.
 - Sequential behavior should be enabled using 'smach'.
 
+## Team
+- [Ian Wakely](https://github.com/raveious)
+- [Akhil Kurup](https://github.com/amkurup)
+- [Phillip Scramlin](https://github.com/pdscraml) (Project Leader)
 
-## Current Progress
+# Current Progress
 
 ##### State Machine (PUTTING IT ALL TOGETHER)
 - [x] Joystick control
@@ -58,7 +62,7 @@
 
 #### Action Library
 - [ ] Wait for goal complete, define state completeness for state transition
-- See its usage in the [congenial-couscous](https://github.com/RogerGomes29/congenial-couscous) repository.
+- See its usage in the [congenial-couscous](https://github.com/RogerGomes29/congenial-couscous) repo.
 
 ## Final Testing Checklist
 - [ ] Optimize time
@@ -68,11 +72,6 @@
 - [ ] Able to discover and save WP
 - [ ] Able to return to WP
 - [ ] Able to count eggs at WP
-
-## Team
-- [Ian Wakely](https://github.com/raveious)
-- [Akhil Kurup](https://github.com/amkurup)
-- [Phillip Scramlin](https://github.com/pdscraml) (Project Leader)
 
 # Calibration
 
