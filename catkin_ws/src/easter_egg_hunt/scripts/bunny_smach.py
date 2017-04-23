@@ -14,6 +14,7 @@ import smach
 import smach_ros
 import egg_detect
 import joystick
+import wall_follow
 
 def main():
     rospy.init_node('master_state_machine')
@@ -27,6 +28,9 @@ def main():
         smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
                                transitions={'BUTTON_PRESSED':'Egg_Detect', 'BUTTON_NEVER_PRESSED': '0'})
         smach.StateMachine.add('Egg_Detect', egg_detect.bunny_egg_detect(),
+                               transitions={'0':'',
+                                            '1':''})
+        smach.StateMachine.add('Explore', wall_follow.wallFollow(),
                                transitions={'0':'',
                                             '1':''})
 
