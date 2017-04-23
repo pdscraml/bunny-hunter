@@ -6,7 +6,7 @@
 #               Ian
 #              Akhil
 #
-# Revision: v1.1
+# Revision: v1.2
 
 # imports
 import rospy
@@ -38,10 +38,13 @@ class wallFollow(smach.State):
         self.done = 0
         self.i = 0
         self.j = 0
+        self.k = 0
 
         # define speed and turning coefficients
-        self.turnCoef = [(x ** 2 - 9000) / 5000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 9000) / 5000000.0 for x in xrange(0, 91)]
+        self.turnCoef = [(x ** 2 - 8750) / 5000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 5000000.0 for x in xrange(0, 91)]
         self.speedCoef = [(-x ** 2 + 9900) / 7500000.0 for x in xrange(-90,91)]
+        # define random spin time
+        self.rand = random.randrange(120, 150)
 
         # subscribers and publishers
         rospy.Subscriber("/scan", LaserScan, self.function)
@@ -54,12 +57,14 @@ class wallFollow(smach.State):
             return 'EXPLORATION_COMPLETE'
         else:
             return 'EXPLORATION_INCOMPLETE'
-
+        if self.k >= 3:
+            return 'EXPLORATION_COMPLETE'
 
     # function to switch between states
     def function(self, data):
         self.i += 1
-        if self.i > random.randrange(90, 100):
+
+        if self.i > self.rand:
             self.jackalSpin(data)
             # self.Callback(data)
         else:
@@ -69,12 +74,19 @@ class wallFollow(smach.State):
     # spin jackal 360 deg
     def jackalSpin(self, data):
         print ('jackalSpin')
+
+        # publish spin msg
         self.cmd.linear.x = 0
         self.cmd.angular.z = 0.45
         self.pub.publish(self.cmd)
+        # increment j on every iteration
         self.j += 1
-        if self.j > 130:
+        # reset 'i' to get out of spin
+        if self.j > 123:
             self.i = 0
+            self.k += 1
+
+        print (self.k)
 
 
     def Callback(self, data):
