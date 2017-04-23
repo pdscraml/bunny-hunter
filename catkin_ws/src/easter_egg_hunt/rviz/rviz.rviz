@@ -280,13 +280,13 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Move Base
-    - Class: rviz/MarkerArray
+    - Arrow Length: 0.5
+      Class: rviz/PoseArray
+      Color: 255; 25; 0
       Enabled: true
-      Marker Topic: /WaypointManager/waypoint_visualization
       Name: Waypoints
-      Namespaces:
-        WaypointManager: true
-      Queue Size: 100
+      Topic: /WaypointManager/waypoints
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
