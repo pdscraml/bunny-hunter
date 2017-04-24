@@ -29,7 +29,7 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
-                               transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
+                               transitions={'BUTTON_PRESSED':'ORIGIN_DETECT',
                                             'BUTTON_NEVER_PRESSED': '0'})
 
         smach.StateMachine.add('ENABLE_DISCOVERY', discovery.EnableWaypointDiscovery(),
@@ -48,7 +48,7 @@ def main():
 
 
         smach.StateMachine.add('START_GOAL', start_goal.jackal_start_goal(),
-                               transitions={'GOAL_REACHED':'DISABLE_DISCOVERY',
+                               transitions={'GOAL_REACHED':'EGG_DETECT',
                                             'GOAL_NOT_REACHED':'0'},
                                remapping={'destination':'sm_origin'})
 
