@@ -26,7 +26,7 @@ from sensor_msgs.msg import Image
 class bunny_egg_detect(smach.State):
     # init state machine
     def __init__(self):
-        smach.State.__init__(self, outcomes=['0','1'])
+        smach.State.__init__(self, outcomes=['EGGS_DETECTED', 'EGGS_NOT_DETECTED'])
 
     # define executation stage
     def execute(self, userdata):
@@ -47,12 +47,12 @@ class bunny_egg_detect(smach.State):
         while not rospy.is_shutdown():
             rate.sleep()
 
-        # complete?
-        if self.done:
-            rospy.signal_shutdown("Detected all eggs!")
-            return '1'
-        else:
-            return '0'
+        # # complete?
+        # if self.done:
+        #     rospy.signal_shutdown("Detected all eggs!")
+        #     return '1'
+        # else:
+        #     return '0'
 
 
     # egg detection algorithm
@@ -133,3 +133,10 @@ class bunny_egg_detect(smach.State):
         # stop subscription
         self.sub.unregister()
         self.done = 1
+
+        # complete?
+        if self.done:
+            rospy.signal_shutdown("Detected all eggs!")
+            return 'EGGS_DETECTED'
+        else:
+            return 'EGGS_NOT_DETECTED'

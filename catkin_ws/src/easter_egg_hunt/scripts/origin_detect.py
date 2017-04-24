@@ -6,7 +6,7 @@
 #               Ian
 #              Akhil
 #
-# Revision: v1.1
+# Revision: v1.2
 
 # imports
 import rospy
@@ -24,32 +24,15 @@ from nav_msgs.msg import Odometry
 class jackal_origin_detect(smach.State):
     # init state machine
     def __init__(self):
-        smach.State.__init__(self, outcomes=['ORIGIN_DETECTED','ORIGIN_NOT_DETECTED'], output_keys=['self.origin'])
+        smach.State.__init__(self, outcomes=['ORIGIN_DETECTED','ORIGIN_NOT_DETECTED'], output_keys=['origin'])
 
     # define executation stage
     def execute(self, userdata):
-        # init status variable
-        self.done = 0
-
-        # subscribe to odometry to get initial pose
-        self.origin_pose = rospy.Subscriber("/odometry/filtered", Odometry, self.origin_detect)
-
-        rospy.spin()
-
-        # complete?
-        if self.done:
-            userdata.origin = self.origin
+        # Wait for initial pose from odometry data
+        payload = rospy.wait_for_message("/odometry/filtered", Odometry, timeout=None)
+        # if pose recieved:
+        if payload:
+            userdata.origin = payload.pose.pose
             return 'ORIGIN_DETECTED'
         else:
             return 'ORIGIN_NOT_DETECTED'
-
-
-    def origin_detect(self, data):
-        # get origin pose and position
-        print('origin at:')
-        self.origin = data.pose.pose
-        self.origin_pose.unregister()
-        print self.origin
-
-        # set status
-        self.done = 1

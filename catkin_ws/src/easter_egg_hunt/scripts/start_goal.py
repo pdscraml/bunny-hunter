@@ -6,7 +6,7 @@
 #               Ian
 #              Akhil
 #
-# Revision: v1.1
+# Revision: v1.2
 
 # imports
 import rospy
@@ -35,12 +35,12 @@ class jackal_start_goal(smach.State):
         # define destination as move base
         dest = []
         dest = MoveBaseGoal()
+
         # set initial position as goal
         dest.target_pose.header.frame_id = 'map'
         dest.target_pose.header.stamp = rospy.Time.now()
         # dest.target_pose.pose.position = Point(0.0, 0.0, 0.0)
         # dest.target_pose.pose.orientation = Quaternion(0.0, 0.0, 0.7, 0.7)
-
         dest.target_pose.pose = userdata.destination
 
         print('recieved dest:')
@@ -51,14 +51,10 @@ class jackal_start_goal(smach.State):
         mvbs.wait_for_server()
         # set move_base goal
         mvbs.send_goal(dest)
-        mvbs.wait_for_result()
+        mvbs.wait_for_result(rospy.Duration(10))
         # mvbs.cancel_goal()
-        rospy.loginfo('Back to the Start!')
 
-        self.done = 1
-
-        # complete?
-        if self.done:
+        if(mvbs.get_state() ==  GoalStatus.SUCCEEDED):
             return 'GOAL_REACHED'
         else:
             return 'GOAL_NOT_REACHED'
