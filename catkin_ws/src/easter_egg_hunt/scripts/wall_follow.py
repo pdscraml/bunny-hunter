@@ -35,6 +35,7 @@ class wallFollow(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['EXPLORATION_COMPLETE','EXPLORATION_INCOMPLETE'])
 
+
     # define executation stage
     def execute(self, userdata):
         # init status variable
@@ -48,6 +49,7 @@ class wallFollow(smach.State):
         self.speedCoef = [(-x ** 2 + 8750) / 7500000.0 for x in xrange(-90,91)]
 
         # define random spin time
+        # self.rand = random.randrange(10, 40)
         self.rand = random.randrange(100, 140)
 
         # define publisher to Twist
@@ -56,7 +58,16 @@ class wallFollow(smach.State):
         # subscribe to laserscan
         self.lidar = rospy.Subscriber("/scan", LaserScan, self.function)
 
-        rospy.spin()
+        rate = rospy.Rate(1)
+
+        while not rospy.is_shutdown():
+            if self.done:
+                print('EXPLORATION_COMPLETE')
+                return 'EXPLORATION_COMPLETE'
+            # else:
+            #     return 'EXPLORATION_INCOMPLETE'
+
+            rate.sleep()
 
 
     # function to switch between states
@@ -69,25 +80,26 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
+        if self.k >= 4:
+            self.lidar.unregister()
+            print ('unregistered')
+            self.done = 1
+
 
     # spin jackal 360 deg
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        self.cmd.angular.z = 0.45
+        self.cmd.angular.z = 0.4
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
         self.j += 1
 
         # reset 'i' to get out of spin
-        if self.j > 135:
+        if self.j > 150:
             self.i = 0
             self.k += 1
-
-        if self.k >= 4:
-            self.lidar.unregister()
-            return 'EXPLORATION_COMPLETE'
 
 
     def Callback(self, data):
@@ -115,7 +127,7 @@ class wallFollow(smach.State):
 
         else:
             # rospy.loginfo("Normal hallway")
-            for p in range(0, 181):
+            for p in range(0, 180):
                 # Inf range return means its over 10m from the LIDAR
                 if math.isinf(data.ranges[p]) or math.isnan(data.ranges[p]):
                     speedVal = speedVal + (self.speedCoef[p] * 10)

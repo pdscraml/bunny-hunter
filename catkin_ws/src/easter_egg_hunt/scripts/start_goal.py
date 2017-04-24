@@ -19,6 +19,9 @@ import smach_ros
 
 from geometry_msgs.msg import Point, Quaternion
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
+from actionlib_msgs.msg import *
+
+from nav_msgs.msg import Odometry
 
 
 # detect origin
@@ -51,10 +54,12 @@ class jackal_start_goal(smach.State):
         mvbs.wait_for_server()
         # set move_base goal
         mvbs.send_goal(dest)
-        mvbs.wait_for_result(rospy.Duration(10))
+        mvbs.wait_for_result()#rospy.Duration(10))
         # mvbs.cancel_goal()
 
         if(mvbs.get_state() ==  GoalStatus.SUCCEEDED):
+            payload = rospy.wait_for_message("/odometry/filtered", Odometry, timeout=None)
+            print payload.pose.pose
             return 'GOAL_REACHED'
         else:
             return 'GOAL_NOT_REACHED'
