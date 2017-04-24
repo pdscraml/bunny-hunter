@@ -50,6 +50,9 @@ class wallFollow(smach.State):
         self.rand = random.randrange(100, 140)
 
         self.origin_pose = rospy.Subscriber("/odometry/filtered", Odometry, self.origin_detect)
+        # # subscribe to laserscan
+        # self.lidar = rospy.Subscriber("/scan", LaserScan, self.function)
+
 
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
 
@@ -87,16 +90,17 @@ class wallFollow(smach.State):
         print('dest')
         print dest.target_pose.pose
 
-        # actionlib as client for move base
-        mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-        mvbs.wait_for_server()
-        # set move_base goal
-        mvbs.send_goal(dest)
-        mvbs.wait_for_result()
-        # mvbs.cancel_goal()
-        rospy.loginfo('Back to the Start!')
+        # # actionlib as client for move base
+        # mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+        # mvbs.wait_for_server()
+        # # set move_base goal
+        # mvbs.send_goal(dest)
+        # mvbs.wait_for_result()
+        # # mvbs.cancel_goal()
+        # rospy.loginfo('Back to the Start!')
 
         return 'EXPLORATION_COMPLETE'
+
 
     # function to switch between states
     def function(self, data):

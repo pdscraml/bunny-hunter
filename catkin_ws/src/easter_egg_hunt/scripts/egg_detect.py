@@ -49,6 +49,7 @@ class bunny_egg_detect(smach.State):
 
         # complete?
         if self.done:
+            rospy.signal_shutdown("Detected all eggs!")
             return '1'
         else:
             return '0'
@@ -132,4 +133,3 @@ class bunny_egg_detect(smach.State):
         # stop subscription
         self.sub.unregister()
         self.done = 1
-        rospy.signal_shutdown("Detected all eggs!")
