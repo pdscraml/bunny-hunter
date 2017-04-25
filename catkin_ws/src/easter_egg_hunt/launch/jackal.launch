@@ -10,4 +10,7 @@
   <!-- other services -->
   <include file="$(find easter_egg_hunt)/launch/include/ar.launch" />
   <include file="$(find easter_egg_hunt)/launch/include/navigation.launch" />
+
+  <!-- Misc. Nodes -->
+  <node pkg="easter_egg_hunt" name="discovery" type="discovery.py"  output="screen" required="true"/>
 </launch>

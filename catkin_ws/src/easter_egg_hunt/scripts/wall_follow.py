@@ -80,7 +80,7 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
-        if self.k >= 4:
+        if self.k >= 5:
             self.lidar.unregister()
             print ('unregistered')
             self.done = 1
@@ -90,14 +90,14 @@ class wallFollow(smach.State):
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        self.cmd.angular.z = 0.4
+        self.cmd.angular.z = 0.35
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
         self.j += 1
 
         # reset 'i' to get out of spin
-        if self.j > 150:
+        if self.j > 175:
             self.i = 0
             self.k += 1
 
@@ -138,7 +138,7 @@ class wallFollow(smach.State):
                     # Turn away from walls
                     turnVal = turnVal + (self.turnCoef[p] * data.ranges[p])
 
-            speedVal = min(speedVal * 1.2, 0.35) # sets max speed
+            speedVal = min(speedVal * 1.2, 0.33) # sets max speed
             turnVal = turnVal * 1
 
             if front_zone_avg < 2.2:
