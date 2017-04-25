@@ -4,6 +4,7 @@ import smach
 import smach_ros
 import sys
 import tf
+import math
 
 from geometry_msgs.msg import PoseStamped, PoseArray
 from std_msgs.msg import Header
@@ -17,7 +18,7 @@ class EnableWaypointDiscovery(smach.State):
         super(EnableWaypointDiscovery, self).__init__(outcomes=['WAYPOINTS_ENABLED'])
 
     def execute(self, userdata):
-        global manager
+        # global manager
         manager.sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, manager.marker_callback)
         return 'WAYPOINTS_ENABLED'
 
@@ -59,34 +60,39 @@ class WaypointManager(object):
             viz_update.sleep()
 
     def saveMarkerWaypoint(self, marker):
-        if self.tf_list.canTransform('map', 'head_camera', rospy.Time(0)):
-            pose_st = PoseStamped()
-            pose_st = marker.pose
+        marker_frame = "ar_marker_{}".format(marker.id)
+        now = rospy.Time(0)
+        if self.tf_list.canTransform('map', 'head_camera', now):
+            try:
+                pose_st = PoseStamped()
+                pose_st = marker.pose
 
-            quat = (pose_st.pose.orientation.x,
-                    pose_st.pose.orientation.y,
-                    pose_st.pose.orientation.z,
-                    pose_st.pose.orientation.w)
+                quat = (pose_st.pose.orientation.x,
+                        pose_st.pose.orientation.y,
+                        pose_st.pose.orientation.z,
+                        pose_st.pose.orientation.w)
 
-            (roll, pitch, yaw) = (tf.transformations.euler_from_quaternion(quat))
-            converted = tf.transformations.quaternion_from_euler(3.14159, pitch - 1.570796327, 0.0)
+                roll, pitch, yaw = tf.transformations.euler_from_quaternion(quat)
 
-            # print(roll, pitch, yaw)
+                # Moves point to a distance infront of the Alvar marker
+                yaw = yaw + math.pi/2
+                pose_st.pose.position.x = pose_st.pose.position.x - (self.marker_distance * math.cos(yaw))
+                pose_st.pose.position.z = pose_st.pose.position.z - (self.marker_distance * math.sin(yaw))
 
-            pose_st.pose.orientation.x = converted[0]
-            pose_st.pose.orientation.y = converted[1]
-            pose_st.pose.orientation.z = converted[2]
-            pose_st.pose.orientation.w = converted[3]
+                converted = tf.transformations.quaternion_from_euler(0, -math.pi/2, yaw)
+                pose_st.pose.orientation.x = converted[0]
+                pose_st.pose.orientation.y = converted[1]
+                pose_st.pose.orientation.z = converted[2]
+                pose_st.pose.orientation.w = converted[3]
 
-            # Moves point to a distance infront of the Alvar marker
-            pose_st.pose.position.z = pose_st.pose.position.z - self.marker_distance
+                pose_st.header.frame_id = 'head_camera'
+                # print(pose_st)
 
-            pose_st.header.frame_id = 'head_camera'
-            # print(pose_st)
+                transd_pose = self.tf_list.transformPose("map", pose_st)
 
-            transd_pose = self.tf_list.transformPose("map", pose_st)
-
-            self._waypoints[marker.id] = transd_pose.pose
+                self._waypoints[marker.id] = transd_pose.pose
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                pass
         else:
             rospy.logwarn("Had problems transforming the waypoint.")
 
@@ -102,6 +108,6 @@ class WaypointManager(object):
 if __name__ == "__main__":
     try:
         global manager
-        manager = WaypointManager()
+        manager = WaypointManager(0.45)
     except rospy.ROSInterruptException:
         pass
