@@ -280,12 +280,12 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Move Base
-    - Arrow Length: 0.5
+    - Arrow Length: 0.3
       Class: rviz/PoseArray
       Color: 255; 25; 0
       Enabled: true
       Name: Waypoints
-      Topic: /WaypointManager/waypoints
+      Topic: /WaypointManager/poses
       Unreliable: false
       Value: true
   Enabled: true

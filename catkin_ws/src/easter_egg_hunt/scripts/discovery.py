@@ -4,8 +4,9 @@ import sys
 import tf
 import math
 
-from easter_egg_hunt.srv import EnableDiscovery
+from easter_egg_hunt.srv import EnableDiscovery, EnableDiscoveryResponse
 from geometry_msgs.msg import PoseStamped, PoseArray
+from easter_egg_hunt.msg import DiscoveredWaypoints, Waypoint
 from std_msgs.msg import Header
 from ar_track_alvar_msgs.msg._AlvarMarkers import AlvarMarkers
 
@@ -18,7 +19,9 @@ class WaypointManager(object):
         self.tf_list = tf.TransformListener()
         self.sub = None
 
-        viz_pub = rospy.Publisher("WaypointManager/waypoints", PoseArray, queue_size=10)
+        self.pub = rospy.Publisher("WaypointManager/waypoints", DiscoveredWaypoints, queue_size=10)
+
+        viz_pub = rospy.Publisher("WaypointManager/poses", PoseArray, queue_size=10)
         viz_update = rospy.Rate(2)
 
         self.srv = rospy.Service("WaypointManager/enable_discovery", EnableDiscovery, self.enable_discovery)
@@ -29,12 +32,22 @@ class WaypointManager(object):
         while not rospy.is_shutdown():
             header = Header(frame_id='/map')
             viz_pub.publish(PoseArray(header, self._waypoints.values()))
+            self.pub.publish([Waypoint(ID, self._waypoints[ID]) for ID in self._waypoints])
 
             rospy.loginfo("marker update {}".format(self._waypoints.keys()))
             viz_update.sleep()
 
     def enable_discovery(self, data):
-        print(data)
+        status = self.sub == None
+        if data.enable and not self.sub:
+            self.sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkers, self.marker_callback)
+            rospy.loginfo("Enabling discovery")
+        elif not data.enable and self.sub:
+            self.sub.unregister()
+            self.sub = None
+            rospy.loginfo("Disabling discovery")
+
+        return EnableDiscoveryResponse(status)
 
     def saveMarkerWaypoint(self, marker):
         marker_frame = "ar_marker_{}".format(marker.id)
