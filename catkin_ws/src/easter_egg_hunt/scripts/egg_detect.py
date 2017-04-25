@@ -77,11 +77,12 @@ class bunny_egg_detect(smach.State):
         # cv2.waitKey(0)
 
         # define the list of boundaries
-        boundaries = [([70,  170, 180], [130, 215, 225]), # yellow
-                      ([170, 60,  01],  [225, 110, 20]),  # blue
-                      ([65,  125, 25],  [125, 210, 120]), # green
-                      ([15,  100, 160], [30,  130, 225]), # orange
-                      ([50,  05,  110], [120, 70,  255])] # red
+        boundaries = [([70, 255, 255], [150, 255, 255]), # yellow
+                      ([230, 150, 60], [255, 190, 100]), # blue
+                      ([80, 170, 80], [130, 210, 120]),  # green
+                      ([1, 180, 255], [20, 200, 255]),   # orange
+                      ([70, 120, 215], [130, 175, 255]), # red
+                      ([160, 120, 160], [180, 150, 180])]# violet
 
         # loop over the boundaries
         for (lower, upper) in boundaries:
@@ -101,8 +102,8 @@ class bunny_egg_detect(smach.State):
             # Median Blurring to remove Salt-Pepper noise
             blur_img = cv2.medianBlur(output,9)
             blur_img = cv2.medianBlur(blur_img,9)
-            # cv2.imshow("results", blur_img)
-            # cv2.waitKey(0)
+            cv2.imshow("results", blur_img)
+            cv2.waitKey(0)
 
             # convert to gray-scale to eliminate lighting effects
             gray = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
@@ -132,6 +133,8 @@ class bunny_egg_detect(smach.State):
               print('Orange: %d'%len(contours))
             elif i==4:
               print('Red: %d'%len(contours))
+            elif i==5:
+              print('Violet: %d'%len(contours))
             else:
               print('New Color!?')
 
