@@ -100,7 +100,7 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
-        if self.k >= 5:
+        if self.k >= 1:
             self.lidar.unregister()
             print ('unregistered')
             self.done = 1
@@ -110,7 +110,7 @@ class wallFollow(smach.State):
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        self.cmd.angular.z = 0.35
+        self.cmd.angular.z = 0.35 * random.sample([-1, 1],1)
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
