@@ -73,25 +73,33 @@ class bunny_egg_detect(smach.State):
         # imgmsg_to_cv2 converts an image message pointer to an OpenCV
         # message.
         image = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
-        image = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         # cv2.imshow("results", image)
         # cv2.waitKey(0)
 
         # # define the list of boundaries (BGR)
-        # boundaries = [([70, 255, 255], [150, 255, 255]), # yellow
+        # boundaries = [([160, 255, 255], [60, 190, 205]), # yellow
         #               ([230, 150, 60], [255, 190, 100]), # blue
         #               ([80, 170, 80], [130, 210, 120]),  # green
         #               ([1, 180, 255], [20, 200, 255]),   # orange
         #               ([70, 120, 215], [130, 175, 255]), # red
         #               ([160, 120, 160], [180, 150, 180])]# violet
 
-        # define the list of boundaries
-        boundaries = [([55, 80, 80], [65, 255, 255]), # yellow
-                      ([200, 80, 80], [210, 255, 255]), # blue
-                      ([115, 80, 80], [125, 255, 255]),  # green
-                      ([35, 80, 80], [45, 255, 255]),   # orange
-                      ([0, 60, 80], [10, 255, 255]), # red
-                      ([298, 50, 70], [302, 60, 75])] # violet
+        boundaries = [([160, 255, 255], [60, 190, 205]), # yellow
+                      ([218, 127, 79], [223, 115, 54]),  # blue
+                      ([175, 175, 108], [104, 139, 93]), # green
+                      ([57, 169, 235], [13, 136, 209]),  # orange
+                      ([136, 136, 200], [67, 83, 159]),  # red
+                      ([218, 171, 183], [119, 34, 82])]  # violet
+
+        # # define the list of boundaries
+        # # boundaries = [([20, 100, 100], [30, 255, 255]), # yellow
+        # boundaries = [([20, 100, 100], [30, 255, 255]), # yellow
+        #               ([90, 100, 100], [110, 255, 255]), # blue
+        #               ([60, 100, 100], [95, 255, 255]),  # green
+        #               ([5, 100, 100], [30, 255, 255]),   # orange
+        #               ([160, 100, 100], [185, 255, 255]), # red
+        #               ([128, 100, 100], [164, 255, 255])] # violet
 
         # loop over the boundaries
         for (lower, upper) in boundaries:
@@ -111,8 +119,8 @@ class bunny_egg_detect(smach.State):
             # Median Blurring to remove Salt-Pepper noise
             blur_img = cv2.medianBlur(output,9)
             blur_img = cv2.medianBlur(blur_img,9)
-            cv2.imshow("results", blur_img)
-            cv2.waitKey(0)
+            # cv2.imshow("results", blur_img)
+            # cv2.waitKey(0)
 
             # convert to gray-scale to eliminate lighting effects
             gray = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)

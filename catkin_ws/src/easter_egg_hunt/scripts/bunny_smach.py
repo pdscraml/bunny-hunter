@@ -48,6 +48,7 @@ def main():
 
         smach.StateMachine.add('START_GOAL', start_goal.jackal_start_goal(),
                                transitions={'GOAL_REACHED':'MAP_SAVER',
+                               # transitions={'GOAL_REACHED':'DISABLE_DISCOVERY',
                                             'GOAL_NOT_REACHED':'0'},
                                remapping={'destination':'sm_origin'})
 
