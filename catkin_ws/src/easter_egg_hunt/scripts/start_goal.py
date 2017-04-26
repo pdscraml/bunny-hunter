@@ -47,7 +47,7 @@ class jackal_start_goal(smach.State):
         dest.target_pose.pose = userdata.destination
 
         print('recieved dest:')
-        rospy.debuginfo('dest.target_pose.pose')
+        rospy.loginfo('dest.target_pose.pose')
 
         # actionlib as client for move base
         mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
