@@ -45,12 +45,12 @@ class wallFollow(smach.State):
         self.k = 0
 
         # define speed and turning coefficients
-        self.turnCoef = [(x ** 2 - 8750) / 500000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 500000.0 for x in xrange(0, 91)]
+        self.turnCoef = [(x ** 2 - 8750) / 5000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 5000000.0 for x in xrange(0, 91)]
         self.speedCoef = [(-x ** 2 + 8750) / 7500000.0 for x in xrange(-90,91)]
 
         # define random spin time
         # self.rand = random.randrange(20, 40)
-        self.rand = random.randrange(80, 100)
+        self.rand = random.randrange(70, 90)
         self.spin_dir = random.sample(['-0.35', '0.35'],1)
 
         # define publisher to Twist
@@ -93,7 +93,8 @@ class wallFollow(smach.State):
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        self.cmd.angular.z = (float(self.spin_dir[0]))
+        # self.cmd.angular.z = (float(self.spin_dir[0]))
+        self.cmd.angular.z = 0.35
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
