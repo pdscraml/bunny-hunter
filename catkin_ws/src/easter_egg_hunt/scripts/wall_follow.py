@@ -50,8 +50,8 @@ class wallFollow(smach.State):
 
         # define random spin time
         # self.rand = random.randrange(20, 40)
-        self.rand = random.randrange(70, 90)
-        self.spin_dir = random.sample(['-0.35', '0.35'],1)
+        self.rand = random.randrange(80, 100)
+        self.spin_dir = random.sample(['-0.36', '0.36'],1)
 
         # define publisher to Twist
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
@@ -93,15 +93,15 @@ class wallFollow(smach.State):
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        # self.cmd.angular.z = (float(self.spin_dir[0]))
-        self.cmd.angular.z = 0.35
+        self.cmd.angular.z = (float(self.spin_dir[0]))
+        # self.cmd.angular.z = 0.35
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
         self.j += 1
 
         # reset 'i' to get out of spin
-        if self.j > 175:
+        if self.j > 170:
             self.i = 0
             self.k += 1
 
@@ -142,7 +142,7 @@ class wallFollow(smach.State):
                     # Turn away from walls
                     turnVal = turnVal + (self.turnCoef[p] * data.ranges[p])
 
-            speedVal = min(speedVal * 1.2, 0.33) # sets max speed
+            speedVal = min(speedVal * 1.2, 0.35) # sets max speed
             turnVal = turnVal * 1
 
             if front_zone_avg < 2.2:
