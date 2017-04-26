@@ -58,19 +58,28 @@ $ roslaunch easter_egg_hunt exploration.launch
 
 Press and hold X on joystick to begin hunt.
 
-- *Start_Pause*: Jackal starts in Start_Pause state
-- *BUTTON_PRESSED*: Jackal transitions to Origin_Detect upon button press.
-- *Origin_Detect*: Jackal saves origin waypoint
-- *ORIGIN-DETECTED*: Once origin waypoint detected Jackal switches to EXPLORATION state.
-- *EXPLORATION*: Jackal will explore area, building map.
-- *EXPLORATION_COMPLETE*: After map is determined to be complete or timer issued, Jackal transitions to START_GOAL.
-- *START_GOAL*: Jackal sets waypoint goal to origin.
+- **Start_Pause**: Jackal starts in Start_Pause state
+- *Button_Pressed*: Jackal transitions to Origin_Detect upon button press.
+- **Enable_Discovery**: Alvar marker discovery is enabled
+- *Waypoints_Enabled*: Jackal transitions to Origin_Detect after Ar discovery enabled.
+- **Origin_Detect**: Jackal saves origin waypoint
+- *Origin_Detected*: Once origin waypoint saved Jackal switches to EXPLORATION state.
+- **Exploration**: Jackal will explore area, building map and detecting Alvar Marker.
+- *Exploration_Complete*: After map is determined to be complete or timer issued, Jackal transitions to START_GOAL.
+- **Start_Goal**: Jackal sets waypoint goal to origin.
+- *GOAL_REACHED*:  Once Jackal determines waypoint goal successful it transitions to Disable_Discovery
+- **Disable_Discovery**: Ar Marker discovery disabled.
+- *Waypoints_Disabled*:  Transitions to Marker_Display_Wait after Ar Marker discovery disabled.
+- **Marker_Display_Wait**: Jackal waits for button press to detect marker.
 
-Jackal waits for user joystick input when Ar code is ready to be read.
+Press joystick button to enable Ar detection.
 
-- *GOAL_REACHED*: Once Jackal determines waypoint goal successful and Ar code detected, it transitions to EGG_DETECT state.
-- *EGG_DETECT*: Jackal sets waypoint to detected AR at origin. Proceeds to origin to detect eggs.  Jackal will then proceed back to origin.
-
+- *Button_Pressed*: After button press, Jackal transitions to Select_Bunny state.
+- **Select_Bunny**: Jackal waits for service message that Ar Marker was detected.
+- *Waypoint_Selected*: Transition to Bunny_Nav State
+- **Bunny_Nav**: Set move_base action goal to designated bunny.
+- *Button_Pressed*: After waypoint successfully reached, Jackal transitions to Egg_Detect state.
+- **Egg_Detect**: Jackal runs egg detection.
 
 ## View Hunt On Local Machine
 
@@ -84,7 +93,8 @@ $ rosrun rviz rviz.rviz
 ##### State Machine (PUTTING IT ALL TOGETHER)
 - [x] Joystick control
 - [x] Master State Machine (calls upper states)
-- [x] Build entire skeleton framework of state machine, then work through each individual module
+- [x
+] Build entire skeleton framework of state machine, then work through each individual module
 - [x] Convert Compeleted Modules to Compatible State Machine “Form”
 
 #### Exploration
