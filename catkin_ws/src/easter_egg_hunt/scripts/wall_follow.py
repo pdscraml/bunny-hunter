@@ -6,7 +6,7 @@
 #               Ian
 #              Akhil
 #
-# Revision: v1.4
+# Revision: v1.5
 
 # imports
 import rospy
@@ -67,10 +67,10 @@ class wallFollow(smach.State):
                 package ='map_server'
                 executable ='map_saver'
 
-                rospy.loginfo("-f "+str(os.path.dirname(os.path.realpath(__file__)))+"/map")
+                rospy.loginfo("-f "+str(os.path.dirname(os.path.realpath(__file__)))+"../maps/map")
 
                 # init node
-                node = roslaunch.core.Node(package, executable, args="-f "+str(os.path.dirname(os.path.realpath(__file__)))+"/map")
+                node = roslaunch.core.Node(package, executable, args="-f "+str(os.path.dirname(os.path.realpath(__file__)))+"../maps/map")
 
                 # launch the node
                 launch = roslaunch.scriptapi.ROSLaunch()

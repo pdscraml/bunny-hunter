@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+# Intro to Robotics - EE5900 - Spring 2017
+#            Final Project
+#          Philip (Team Lead)
+#               Ian
+#              Akhil
+#
+# Revision: v1.3
+
+# imports
 import rospy
 import sys
 import tf

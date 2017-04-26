@@ -47,7 +47,7 @@ class jackal_start_goal(smach.State):
         dest.target_pose.pose = userdata.destination
 
         print('recieved dest:')
-        print dest.target_pose.pose
+        rospy.debuginfo('dest.target_pose.pose')
 
         # actionlib as client for move base
         mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -59,7 +59,7 @@ class jackal_start_goal(smach.State):
 
         if(mvbs.get_state() ==  GoalStatus.SUCCEEDED):
             payload = rospy.wait_for_message("/odometry/filtered", Odometry, timeout=None)
-            print payload.pose.pose
+            # print payload.pose.pose
             return 'GOAL_REACHED'
         else:
             return 'GOAL_NOT_REACHED'
