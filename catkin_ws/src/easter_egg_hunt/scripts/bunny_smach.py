@@ -19,7 +19,7 @@ import discovery
 import origin_detect
 import start_goal
 import waypoint_states
-
+import map_save
 
 def main():
     rospy.init_node('master_state_machine')
@@ -47,9 +47,13 @@ def main():
                                             'EXPLORATION_INCOMPLETE':'0'})
 
         smach.StateMachine.add('START_GOAL', start_goal.jackal_start_goal(),
-                               transitions={'GOAL_REACHED':'DISABLE_DISCOVERY',
+                               transitions={'GOAL_REACHED':'MAP_SAVER',
                                             'GOAL_NOT_REACHED':'0'},
                                remapping={'destination':'sm_origin'})
+
+        smach.StateMachine.add('MAP_SAVER', map_save.bunny_map_save(),
+                               transitions={'MAP_COMPLETE':'DISABLE_DISCOVERY',
+                                            'MAP_INCOMPLETE':'0'})
 
         smach.StateMachine.add('DISABLE_DISCOVERY', waypoint_states.DisableWaypointDiscovery(),
                                transitions={'WAYPOINTS_DISABLED':'MARKER_DISPLAY_WAIT'})
