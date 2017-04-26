@@ -38,7 +38,7 @@ class DisableWaypointDiscovery(smach.State):
 
 class WaypointSelect(smach.State):
     def __init__(self):
-        super(WaypointSelect, self).__init__(outcomes=['WAYPOINT_SELECTED', 'WAYPOINT_UNAVAILABLE'])
+        super(WaypointSelect, self).__init__(outcomes=['WAYPOINT_SELECTED', 'WAYPOINT_UNAVAILABLE'], output_keys=["marker_dest", "marker_ID"])
 
     def execute(self, userdata):
         selected_marker = None
@@ -66,7 +66,7 @@ class WaypointSelect(smach.State):
 
 class WaypointNav(smach.State):
     def __init__(self):
-        super(WaypointNav, self).__init__(outcomes=["WAYPOINT_REACHED", "FAILED_WAYPOINT"])
+        super(WaypointNav, self).__init__(outcomes=["WAYPOINT_REACHED", "FAILED_WAYPOINT"], input_keys=["marker_dest"])
 
     def execute(self, userdata):
         try:

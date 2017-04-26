@@ -64,15 +64,18 @@ def main():
 
         smach.StateMachine.add('SELECT_BUNNY', waypoint_states.WaypointSelect(),
                                transitions={'WAYPOINT_SELECTED':'EGG_DETECT',
-                                            'WAYPOINT_UNAVAILABLE':'0'})
+                                            'WAYPOINT_UNAVAILABLE':'0'},
+                               remapping={'marker_dest':'marker_dest',
+                                          'marker_ID':'marker_ID'})
 
         smach.StateMachine.add('BUNNY_NAV', waypoint_states.WaypointNav(),
                                transitions={'WAYPOINT_REACHED':'EGG_DETECT',
-                                            'FAILED_WAYPOINT':'START_GOAL'})
+                                            'FAILED_WAYPOINT':'START_GOAL'},
+                               remapping={'marker_dest':'marker_dest'})
 
         smach.StateMachine.add('EGG_DETECT', egg_detect.bunny_egg_detect(),
                                transitions={'EGGS_DETECTED':'START_GOAL',
-                                            'EGGS_NOT_DETECTED':'0'})
+                                            'EGGS_NOT_DETECTED':'START_GOAL'})
 
 
     # Execute SMACH plan
