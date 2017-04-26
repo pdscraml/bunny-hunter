@@ -20,6 +20,7 @@ import origin_detect
 import start_goal
 import waypoint_states
 
+
 def main():
     rospy.init_node('master_state_machine')
 
@@ -36,17 +37,14 @@ def main():
         smach.StateMachine.add('ENABLE_DISCOVERY', waypoint_states.EnableWaypointDiscovery(),
                                transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
 
-
         smach.StateMachine.add('ORIGIN_DETECT', origin_detect.jackal_origin_detect(),
                                transitions={'ORIGIN_DETECTED':'EXPLORATION',
                                             'ORIGIN_NOT_DETECTED':'0'},
                                remapping={'origin':'sm_origin'})
 
-
         smach.StateMachine.add('EXPLORATION', wall_follow.wallFollow(),
                                transitions={'EXPLORATION_COMPLETE':'START_GOAL',
                                             'EXPLORATION_INCOMPLETE':'0'})
-
 
         smach.StateMachine.add('START_GOAL', start_goal.jackal_start_goal(),
                                transitions={'GOAL_REACHED':'DISABLE_DISCOVERY',
@@ -55,7 +53,6 @@ def main():
 
         smach.StateMachine.add('DISABLE_DISCOVERY', waypoint_states.DisableWaypointDiscovery(),
                                transitions={'WAYPOINTS_DISABLED':'MARKER_DISPLAY_WAIT'})
-
 
         smach.StateMachine.add('MARKER_DISPLAY_WAIT', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
                                transitions={'BUTTON_PRESSED':'SELECT_BUNNY',
@@ -72,6 +69,7 @@ def main():
         smach.StateMachine.add('EGG_DETECT', egg_detect.bunny_egg_detect(),
                                transitions={'EGGS_DETECTED':'START_GOAL',
                                             'EGGS_NOT_DETECTED':'0'})
+
 
     # Execute SMACH plan
     outcome = sm.execute()

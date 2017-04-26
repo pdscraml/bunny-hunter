@@ -61,9 +61,29 @@ class wallFollow(smach.State):
         rate = rospy.Rate(1)
 
         while not rospy.is_shutdown():
+            # completed exploration?
             if self.done:
+                # define node params
+                package ='map_server'
+                executable ='map_saver'
+
+                rospy.loginfo("-f "+str(os.path.dirname(os.path.realpath(__file__)))+"/map")
+
+                # init node
+                node = roslaunch.core.Node(package, executable, args="-f "+str(os.path.dirname(os.path.realpath(__file__)))+"/map")
+
+                # launch the node
+                launch = roslaunch.scriptapi.ROSLaunch()
+                launch.start()
+
+                # escelate to process
+                process = launch.launch(node)
+                while process.is_alive():
+                    print process.is_alive()
+
                 print('EXPLORATION_COMPLETE')
                 return 'EXPLORATION_COMPLETE'
+
             # else:
             #     return 'EXPLORATION_INCOMPLETE'
 
