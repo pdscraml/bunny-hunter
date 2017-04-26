@@ -45,7 +45,7 @@ class wallFollow(smach.State):
         self.k = 0
 
         # define speed and turning coefficients
-        self.turnCoef = [(x ** 2 - 8750) / 7500000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 7500000.0 for x in xrange(0, 91)]
+        self.turnCoef = [(x ** 2 - 8750) / 8000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 8000000.0 for x in xrange(0, 91)]
         self.speedCoef = [(-x ** 2 + 8750) / 7500000.0 for x in xrange(-90,91)]
 
         # define random spin time

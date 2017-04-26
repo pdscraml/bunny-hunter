@@ -106,6 +106,6 @@ class WaypointManager(object):
 # standard ros boilerplate
 if __name__ == "__main__":
     try:
-        manager = WaypointManager(0.45)
+        manager = WaypointManager(0.55)
     except rospy.ROSInterruptException:
         pass
