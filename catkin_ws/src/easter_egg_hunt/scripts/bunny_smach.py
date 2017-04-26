@@ -61,11 +61,11 @@ def main():
                                transitions={'BUTTON_PRESSED':'SELECT_BUNNY',
                                             'BUTTON_NEVER_PRESSED': '0'})
 
-        smach.StateMachine.add('SELECT_BUNNY', waypoints_states.WaypointSelect(),
+        smach.StateMachine.add('SELECT_BUNNY', waypoint_states.WaypointSelect(),
                                transitions={'WAYPOINT_SELECTED':'EGG_DETECT',
                                             'WAYPOINT_UNAVAILABLE':'0'})
 
-        smach.StateMachine.add('BUNNY_NAV', waypoints_states.WaypointNav(),
+        smach.StateMachine.add('BUNNY_NAV', waypoint_states.WaypointNav(),
                                transitions={'WAYPOINT_REACHED':'EGG_DETECT',
                                             'FAILED_WAYPOINT':'START_GOAL'})
 
