@@ -49,8 +49,8 @@ class wallFollow(smach.State):
         self.speedCoef = [(-x ** 2 + 8750) / 7500000.0 for x in xrange(-90,91)]
 
         # define random spin time
-        self.rand = random.randrange(30, 50)
-        # self.rand = random.randrange(80, 100)
+        # self.rand = random.randrange(30, 50)
+        self.rand = random.randrange(80, 100)
         self.spin_dir = random.sample(['-0.36', '0.36'],1)
 
         # define publisher to Twist
@@ -83,7 +83,7 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
-        if self.k >= 2:
+        if self.k >= 4:
             self.lidar.unregister()
             print ('unregistered')
             self.done = 1
