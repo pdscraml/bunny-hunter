@@ -76,7 +76,7 @@ class wallFollow(smach.State):
     # function to switch between states
     def function(self, data):
         self.i += 1
-        self.rand = random.randrange(90, 130)
+        # self.rand = random.randrange(90, 130)
         if self.i > self.rand:
             self.jackalSpin(data)
             # self.Callback(data)
@@ -101,7 +101,7 @@ class wallFollow(smach.State):
         self.j += 1
 
         # reset 'i' to get out of spin
-        if self.j > 170:
+        if self.j > 160:
             self.i = 0
             self.k += 1
 
