@@ -45,12 +45,13 @@ class wallFollow(smach.State):
         self.k = 0
 
         # define speed and turning coefficients
-        self.turnCoef = [(x ** 2 - 8750) / 5000000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 5000000.0 for x in xrange(0, 91)]
+        self.turnCoef = [(x ** 2 - 8750) / 4500000.0 for x in xrange(-90, 0)] + [(-x ** 2 + 8750) / 4500000.0 for x in xrange(0, 91)]
         self.speedCoef = [(-x ** 2 + 8750) / 7500000.0 for x in xrange(-90,91)]
 
         # define random spin time
-        # self.rand = random.randrange(10, 40)
+        # self.rand = random.randrange(20, 40)
         self.rand = random.randrange(100, 140)
+        self.spin_dir = random.sample(['-0.35', '0.35'],1)
 
         # define publisher to Twist
         self.pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
@@ -63,24 +64,6 @@ class wallFollow(smach.State):
         while not rospy.is_shutdown():
             # completed exploration?
             if self.done:
-                # define node params
-                package ='map_server'
-                executable ='map_saver'
-
-                rospy.loginfo("-f "+str(os.path.dirname(os.path.realpath(__file__)))+"../maps/map")
-
-                # init node
-                node = roslaunch.core.Node(package, executable, args="-f "+str(os.path.dirname(os.path.realpath(__file__)))+"../maps/map")
-
-                # launch the node
-                launch = roslaunch.scriptapi.ROSLaunch()
-                launch.start()
-
-                # escelate to process
-                process = launch.launch(node)
-                while process.is_alive():
-                    print process.is_alive()
-
                 print('EXPLORATION_COMPLETE')
                 return 'EXPLORATION_COMPLETE'
 
@@ -100,7 +83,7 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
-        if self.k >= 1:
+        if self.k >= 5:
             self.lidar.unregister()
             print ('unregistered')
             self.done = 1
@@ -110,7 +93,7 @@ class wallFollow(smach.State):
     def jackalSpin(self, data):
         # publish spin msg
         self.cmd.linear.x = 0
-        self.cmd.angular.z = 0.35 * random.sample([-1, 1],1)
+        self.cmd.angular.z = (float(self.spin_dir[0]))
         self.pub.publish(self.cmd)
 
         # increment j on every iteration
