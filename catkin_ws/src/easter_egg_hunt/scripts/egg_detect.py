@@ -73,16 +73,25 @@ class bunny_egg_detect(smach.State):
         # imgmsg_to_cv2 converts an image message pointer to an OpenCV
         # message.
         image = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         # cv2.imshow("results", image)
         # cv2.waitKey(0)
 
+        # # define the list of boundaries (BGR)
+        # boundaries = [([70, 255, 255], [150, 255, 255]), # yellow
+        #               ([230, 150, 60], [255, 190, 100]), # blue
+        #               ([80, 170, 80], [130, 210, 120]),  # green
+        #               ([1, 180, 255], [20, 200, 255]),   # orange
+        #               ([70, 120, 215], [130, 175, 255]), # red
+        #               ([160, 120, 160], [180, 150, 180])]# violet
+
         # define the list of boundaries
-        boundaries = [([70, 255, 255], [150, 255, 255]), # yellow
-                      ([230, 150, 60], [255, 190, 100]), # blue
-                      ([80, 170, 80], [130, 210, 120]),  # green
-                      ([1, 180, 255], [20, 200, 255]),   # orange
-                      ([70, 120, 215], [130, 175, 255]), # red
-                      ([160, 120, 160], [180, 150, 180])]# violet
+        boundaries = [([55, 80, 80], [65, 255, 255]), # yellow
+                      ([200, 80, 80], [210, 255, 255]), # blue
+                      ([115, 80, 80], [125, 255, 255]),  # green
+                      ([35, 80, 80], [45, 255, 255]),   # orange
+                      ([0, 60, 80], [10, 255, 255]), # red
+                      ([298, 50, 70], [302, 60, 75])] # violet
 
         # loop over the boundaries
         for (lower, upper) in boundaries:
