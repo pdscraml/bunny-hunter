@@ -29,12 +29,12 @@ def main():
     # Open the container
     with sm:
         # Add states to the container
-        # smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
-        #                        transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
-        #                                     'BUTTON_NEVER_PRESSED': '0'})
+        smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
+                               transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
+                                            'BUTTON_NEVER_PRESSED': '0'})
 
-        # smach.StateMachine.add('ENABLE_DISCOVERY', waypoints_states.EnableWaypointDiscovery(),
-        #                        transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
+        smach.StateMachine.add('ENABLE_DISCOVERY', waypoint_states.EnableWaypointDiscovery(),
+                               transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
 
 
         smach.StateMachine.add('ORIGIN_DETECT', origin_detect.jackal_origin_detect(),
@@ -53,7 +53,7 @@ def main():
                                             'GOAL_NOT_REACHED':'0'},
                                remapping={'destination':'sm_origin'})
 
-        smach.StateMachine.add('DISABLE_DISCOVERY', waypoints_states.DisableWaypointDiscovery(),
+        smach.StateMachine.add('DISABLE_DISCOVERY', waypoint_states.DisableWaypointDiscovery(),
                                transitions={'WAYPOINTS_DISABLED':'MARKER_DISPLAY_WAIT'})
 
 
