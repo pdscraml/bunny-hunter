@@ -57,12 +57,12 @@ class map_checker(object):
         # max area allowed for ignoring unexplored map areas
         max_area = 600
 
-        rate = rospy.Rate(0.035)
+        rate = rospy.Rate(0.1)
         while not rospy.is_shutdown():
 
             if self.height != 0:
                 # Build blank map
-                rospy.loginfo("Check the map...")
+                rospy.loginfo("Building Map...")
                 map_image = np.zeros(( self.height, self.width, 3), np.uint8)
                 map_image[:,0:0.5*self.width] = (255,0,0) # (B, G, R)
                 map_image[:,0.5*self.width:self.width] = (0,255,0)
@@ -173,9 +173,7 @@ class map_checker(object):
 
                 # print contours
                 # cv2.imshow('contour_post', final_contour)
-
                 # cv2.waitKey(0)
-
 
                 # rospy.loginfo("Done making raw_map")
             rate.sleep()
@@ -186,9 +184,9 @@ class map_checker(object):
         self.height = data.info.height
         self.width = data.info.width
 
-        print self.height
-        print self.width
-        print len(data.data)
+        # print self.height
+        # print self.width
+        # print len(data.data)
         for i in range(0, len(data.data)):
             if data.data[i] == -1:
                 self.raw_map.append(205)
