@@ -18,7 +18,7 @@ import wall_follow
 import discovery
 import origin_detect
 import start_goal
-import waypoin_states
+import waypoint_states
 
 def main():
     rospy.init_node('master_state_machine')
@@ -29,12 +29,12 @@ def main():
     # Open the container
     with sm:
         # Add states to the container
-        smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
-                               transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
-                                            'BUTTON_NEVER_PRESSED': '0'})
+        # smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
+        #                        transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
+        #                                     'BUTTON_NEVER_PRESSED': '0'})
 
-        smach.StateMachine.add('ENABLE_DISCOVERY', waypoints_states.EnableWaypointDiscovery(),
-                               transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
+        # smach.StateMachine.add('ENABLE_DISCOVERY', waypoints_states.EnableWaypointDiscovery(),
+        #                        transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
 
 
         smach.StateMachine.add('ORIGIN_DETECT', origin_detect.jackal_origin_detect(),
