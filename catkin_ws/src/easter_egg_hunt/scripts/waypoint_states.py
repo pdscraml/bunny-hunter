@@ -59,7 +59,7 @@ class WaypointSelect(smach.State):
 
         dest = MoveBaseGoal()
         dest.target_pose.header.frame_id = 'map'
-        dest.target_pose.pose = waypoint.pose
+        dest.target_pose.pose = waypoint
 
         userdata.marker_dest = dest
         userdata.marker_ID = waypoint.ID
