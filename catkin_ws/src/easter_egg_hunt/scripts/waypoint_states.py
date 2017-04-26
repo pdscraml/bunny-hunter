@@ -52,7 +52,7 @@ class WaypointSelect(smach.State):
         userdata.marker_dest = dest
         userdata.marker_ID = waypoint.ID
 
-        sleep(5)
+        time.sleep(5)
         return 'WAYPOINT_SELECTED'
 
 class WaypointNav(smach.State):
