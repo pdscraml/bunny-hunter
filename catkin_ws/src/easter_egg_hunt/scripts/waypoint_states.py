@@ -50,7 +50,10 @@ class WaypointSelect(smach.State):
                 continue
 
         try:
-            waypoint = rospy.wait_for_message('WaypointManager/waypoints', DiscoveredWaypoints, timeout=3).waypoints[0]
+            waypoints = rospy.wait_for_message('WaypointManager/waypoints', DiscoveredWaypoints, timeout=3)
+
+            waypoints = {x.ID:x.pose for x in waypoints}
+            waypoint = waypoints[selected_marker.id]
         except (rospy.ROSException, rospy.ROSInterruptException) as e:
             return "WAYPOINT_UNAVAILABLE"
 
@@ -60,6 +63,8 @@ class WaypointSelect(smach.State):
 
         userdata.marker_dest = dest
         userdata.marker_ID = waypoint.ID
+
+        rospy.loginfo(dest)
 
         time.sleep(5)
         return 'WAYPOINT_SELECTED'
