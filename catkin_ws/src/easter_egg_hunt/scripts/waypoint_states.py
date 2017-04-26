@@ -12,6 +12,7 @@ import rospy
 import smach
 import smach_ros
 import time
+import actionlib
 
 from easter_egg_hunt.srv import EnableDiscovery
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
