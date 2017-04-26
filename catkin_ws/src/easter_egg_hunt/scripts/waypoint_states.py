@@ -62,7 +62,7 @@ class WaypointSelect(smach.State):
         dest.target_pose.pose = waypoint
 
         userdata.marker_dest = dest
-        userdata.marker_ID = waypoint.ID
+        userdata.marker_ID = selected_marker[0].id
 
         rospy.loginfo(dest)
 
