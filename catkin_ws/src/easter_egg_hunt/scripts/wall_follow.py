@@ -83,7 +83,7 @@ class wallFollow(smach.State):
         else:
             self.Callback(data)
 
-        if self.k >= 4:
+        if self.k >= 5:
             self.lidar.unregister()
             print ('unregistered')
             self.done = 1
