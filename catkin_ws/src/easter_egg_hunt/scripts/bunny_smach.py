@@ -18,21 +18,22 @@ import wall_follow
 import discovery
 import origin_detect
 import start_goal
+import waypoin_states
 
 def main():
     rospy.init_node('master_state_machine')
 
     # Create a SMACH state machine
-    sm = smach.StateMachine(outcomes=['0', 'EGGS_DETECTED', 'EGGS_NOT_DETECTED'])
+    sm = smach.StateMachine(outcomes=['0'])
 
     # Open the container
     with sm:
         # Add states to the container
         smach.StateMachine.add('Start_Pause', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
-                               transitions={'BUTTON_PRESSED':'ORIGIN_DETECT',
+                               transitions={'BUTTON_PRESSED':'ENABLE_DISCOVERY',
                                             'BUTTON_NEVER_PRESSED': '0'})
 
-        smach.StateMachine.add('ENABLE_DISCOVERY', discovery.EnableWaypointDiscovery(),
+        smach.StateMachine.add('ENABLE_DISCOVERY', waypoints_states.EnableWaypointDiscovery(),
                                transitions={'WAYPOINTS_ENABLED':'ORIGIN_DETECT'})
 
 
@@ -48,17 +49,28 @@ def main():
 
 
         smach.StateMachine.add('START_GOAL', start_goal.jackal_start_goal(),
-                               transitions={'GOAL_REACHED':'EGG_DETECT',
+                               transitions={'GOAL_REACHED':'DISABLE_DISCOVERY',
                                             'GOAL_NOT_REACHED':'0'},
                                remapping={'destination':'sm_origin'})
 
+        smach.StateMachine.add('DISABLE_DISCOVERY', waypoints_states.DisableWaypointDiscovery(),
+                               transitions={'WAYPOINTS_DISABLED':'MARKER_DISPLAY_WAIT'})
 
-        smach.StateMachine.add('DISABLE_DISCOVERY', discovery.DisableWaypointDiscovery(),
-                               transitions={'WAYPOINTS_DISABLED':'EGG_DETECT'})
 
+        smach.StateMachine.add('MARKER_DISPLAY_WAIT', joystick.JoystickButtonPause('/bluetooth_teleop/joy', 0), # X
+                               transitions={'BUTTON_PRESSED':'SELECT_BUNNY',
+                                            'BUTTON_NEVER_PRESSED': '0'})
+
+        smach.StateMachine.add('SELECT_BUNNY', waypoints_states.WaypointSelect(),
+                               transitions={'WAYPOINT_SELECTED':'EGG_DETECT',
+                                            'WAYPOINT_UNAVAILABLE':'0'})
+
+        smach.StateMachine.add('BUNNY_NAV', waypoints_states.WaypointNav(),
+                               transitions={'WAYPOINT_REACHED':'EGG_DETECT',
+                                            'FAILED_WAYPOINT':'START_GOAL'})
 
         smach.StateMachine.add('EGG_DETECT', egg_detect.bunny_egg_detect(),
-                               transitions={'EGGS_DETECTED':'',
+                               transitions={'EGGS_DETECTED':'START_GOAL',
                                             'EGGS_NOT_DETECTED':'0'})
 
     # Execute SMACH plan
