@@ -63,7 +63,7 @@ def main():
                                             'BUTTON_NEVER_PRESSED': '0'})
 
         smach.StateMachine.add('SELECT_BUNNY', waypoint_states.WaypointSelect(),
-                               transitions={'WAYPOINT_SELECTED':'EGG_DETECT',
+                               transitions={'WAYPOINT_SELECTED':'BUNNY_NAV',
                                             'WAYPOINT_UNAVAILABLE':'0'},
                                remapping={'marker_dest':'marker_dest',
                                           'marker_ID':'marker_ID'})
