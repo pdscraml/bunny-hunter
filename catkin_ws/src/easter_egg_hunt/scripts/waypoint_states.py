@@ -44,13 +44,13 @@ class WaypointSelect(smach.State):
         selected_marker = None
         while not selected_marker:
             try:
-                selected_marker = rospy.wait_for_message('/ar_pose_marker', AlvarMarkers, timeout=rospy.Duration(0.2)).markers
+                selected_marker = rospy.wait_for_message('/ar_pose_marker', AlvarMarkers, timeout=0.2).markers
             except (rospy.ROSException, rospy.ROSInterruptException) as e:
                 rospy.logwarn(e)
                 continue
 
         try:
-            waypoint = rospy.wait_for_message('WaypointManager/waypoints', DiscoveredWaypoints, timeout=rospy.Duration(3)).waypoints[0]
+            waypoint = rospy.wait_for_message('WaypointManager/waypoints', DiscoveredWaypoints, timeout=3).waypoints[0]
         except (rospy.ROSException, rospy.ROSInterruptException) as e:
             return "WAYPOINT_UNAVAILABLE"
 
