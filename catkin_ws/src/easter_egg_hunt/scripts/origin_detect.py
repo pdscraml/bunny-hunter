@@ -33,7 +33,7 @@ class jackal_origin_detect(smach.State):
         # if pose recieved:
         if payload:
             userdata.origin = payload.pose.pose
-            print payload.pose.pose
+            # print payload.pose.pose
             return 'ORIGIN_DETECTED'
         else:
             return 'ORIGIN_NOT_DETECTED'
