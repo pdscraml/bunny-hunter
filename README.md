@@ -28,23 +28,71 @@
 - [Akhil Kurup](https://github.com/amkurup)
 - [Phillip Scramlin](https://github.com/pdscraml) (Project Leader)
 
+## Local Development
+
+After cloning this repository, follow these steps to setup the development environment
+```
+$ cd catkin_ws/src
+$ catkin_init_workspace
+$ cd ..
+$ catkin_make
+$ source devel/setup.bash
+```
+
+## Launching Easter Egg Hunt
+
+Once the Jackal is powered up and online, ssh into it with the following commands.
+
+```
+$ ssh rsestudent@jackal2
+$ cd bunny-hunter/catkin_ws
+$ git pull
+$ source devel/setup.bash
+$ source remote-jackal.sh
+$ roslaunch easter_egg_hunt exploration.launch
+```
+
+#### State Machine Operation
+- This will launch SICK LMS200 wrapper, USB camera package, Alvar package, gmapping, and move_base.
+- Alvar Discovery node is also launched.  This manages the discovery and storing of Ar markers.
+
+Press and hold X on joystick to begin hunt.
+
+- *Start_Pause*: Jackal starts in Start_Pause state
+- *BUTTON_PRESSED*: Jackal transitions to Origin_Detect upon button press.
+- *Origin_Detect*: Jackal saves origin waypoint
+- *ORIGIN-DETECTED*: Once origin waypoint detected Jackal switches to EXPLORATION state.
+- *EXPLORATION*: Jackal will explore area, building map.
+- *EXPLORATION_COMPLETE*: After map is determined to be complete or timer issued, Jackal transitions to START_GOAL.
+- *START_GOAL*: Jackal sets waypoint goal to origin.
+
+Jackal waits for user joystick input when Ar code is ready to be read.
+
+- *GOAL_REACHED*: Once Jackal determines waypoint goal successful and Ar code detected, it transitions to EGG_DETECT state.
+- *EGG_DETECT*: Jackal sets waypoint to detected AR at origin. Proceeds to origin to detect eggs.  Jackal will then proceed back to origin.
+
+
+## View Hunt On Local Machine
+
+```
+$ rosrun rviz rviz.rviz
+```
+
+
 # Current Progress
 
 ##### State Machine (PUTTING IT ALL TOGETHER)
 - [x] Joystick control
 - [x] Master State Machine (calls upper states)
-- [ ] Build entire skeleton framework of state machine, then work through each individual module
-- [ ] Convert Compeleted Modules to Compatible State Machine “Form”
+- [x] Build entire skeleton framework of state machine, then work through each individual module
+- [x] Convert Compeleted Modules to Compatible State Machine “Form”
 
 #### Exploration
 - [x] Basic Exploration
-- [ ] Fine-tune Random/Intelligent Spins
-- [ ] Exploration Jerkiness, from map?
-  - Fine-tune gmapping? (i.e. refresh rate)
+- [x] Fine-tune Random/Intelligent Spins
 
 ##### Map-server
-- [ ] Can be run on Jackal?
-- [ ] Launch on Jackal.launch
+- [ ] Needed?
 
 #### Check Map Completeness
 - [ ] Define threshold and Map "Completeness"
@@ -53,12 +101,13 @@
 ##### Easter Basket Hunting
 - [x] Basic Ar Tracker
 - [x] Waypoint on marker
-- [ ] Needs offset from marker
-- [ ] Filter orientation to 2D
+- [x] Needs offset from marker
 - [x] Egg Detection
+- [ ] Enable/Disable Discovery
 
 #### Navigation
 - [x] Navigation Stack
+- [ ] Floating Jackal problem
 
 #### Action Library
 - [ ] Wait for goal complete, define state completeness for state transition
