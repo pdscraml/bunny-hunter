@@ -37,9 +37,11 @@ $ catkin_init_workspace
 $ cd ..
 $ catkin_make
 $ source devel/setup.bash
+$ source remote-jackal.sh
+$ source remote-jackal.sh jackal2
 ```
 
-## Launching Easter Egg Hunt
+## Jackal Development
 
 Once the Jackal is powered up and online, ssh into it with the following commands.
 
@@ -49,7 +51,25 @@ $ cd bunny-hunter/catkin_ws
 $ git pull
 $ source devel/setup.bash
 $ source remote-jackal.sh
+$ roslaunch easter_egg_hunt jackal.launch
+```
+
+## Launching Easter Egg Hunt
+
+For launching the easter egg hunt run the following commands on the Jackal.
+
+```
+$ roslaunch easter_egg_hunt jackal.launch
+```
+
+Then run the following commands in the local machine.
+```
 $ roslaunch easter_egg_hunt exploration.launch
+```
+## View Hunt On Local Machine
+
+```
+$ roslaunch easter_egg_hunt rviz.launch
 ```
 
 #### State Machine Operation
@@ -80,12 +100,6 @@ Press joystick button to enable Ar detection.
 - **Bunny_Nav**: Set move_base action goal to designated bunny.
 - *Button_Pressed*: After waypoint successfully reached, Jackal transitions to Egg_Detect state.
 - **Egg_Detect**: Jackal runs egg detection.
-
-## View Hunt On Local Machine
-
-```
-$ rosrun rviz rviz.rviz
-```
 
 
 # Current Progress
