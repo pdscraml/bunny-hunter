@@ -12,6 +12,7 @@ import rospy
 import smach
 import smach_ros
 import time
+import actionlib
 
 from easter_egg_hunt.srv import EnableDiscovery
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
@@ -74,14 +75,14 @@ class WaypointNav(smach.State):
         super(WaypointNav, self).__init__(outcomes=["WAYPOINT_REACHED", "FAILED_WAYPOINT"], input_keys=["marker_dest"])
 
     def execute(self, userdata):
-        try:
-            mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+        # try:
+        mvbs = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 
-            mvbs.wait_for_server()
+        mvbs.wait_for_server()
 
-            mvbs.send_goal(userdata.marker_dest)
-            mvbs.wait_for_result()
+        mvbs.send_goal(userdata.marker_dest)
+        mvbs.wait_for_result()
 
-            return 'WAYPOINT_REACHED'
-        except Exception as e:
-            return 'FAILED_WAYPOINT'
+        return 'WAYPOINT_REACHED'
+        # except Exception as e:
+        #     return 'FAILED_WAYPOINT'
