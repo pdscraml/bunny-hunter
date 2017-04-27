@@ -66,11 +66,6 @@ Then run the following commands in the local machine.
 ```
 $ roslaunch easter_egg_hunt exploration.launch
 ```
-## View Hunt On Local Machine
-
-```
-$ roslaunch easter_egg_hunt rviz.launch
-```
 
 #### State Machine Operation
 - This will launch SICK LMS200 wrapper, USB camera package, Alvar package, gmapping, and move_base.
@@ -88,6 +83,8 @@ Press and hold X on joystick to begin hunt.
 - *Exploration_Complete*: After map is determined to be complete or timer issued, Jackal transitions to START_GOAL.
 - **Start_Goal**: Jackal sets waypoint goal to origin.
 - *GOAL_REACHED*:  Once Jackal determines waypoint goal successful it transitions to Disable_Discovery
+- **Map_Saver**: Jackal saves map.
+- *MAP_COMPLETE*: Jackal transitions after map is saved.
 - **Disable_Discovery**: Ar Marker discovery disabled.
 - *Waypoints_Disabled*:  Transitions to Marker_Display_Wait after Ar Marker discovery disabled.
 - **Marker_Display_Wait**: Jackal waits for button press to detect marker.
@@ -101,50 +98,11 @@ Press joystick button to enable Ar detection.
 - *Button_Pressed*: After waypoint successfully reached, Jackal transitions to Egg_Detect state.
 - **Egg_Detect**: Jackal runs egg detection.
 
+## View Hunt On Local Machine
 
-# Current Progress
-
-##### State Machine (PUTTING IT ALL TOGETHER)
-- [x] Joystick control
-- [x] Master State Machine (calls upper states)
-- [x
-] Build entire skeleton framework of state machine, then work through each individual module
-- [x] Convert Compeleted Modules to Compatible State Machine “Form”
-
-#### Exploration
-- [x] Basic Exploration
-- [x] Fine-tune Random/Intelligent Spins
-
-##### Map-server
-- [ ] Needed?
-
-#### Check Map Completeness
-- [ ] Define threshold and Map "Completeness"
-- [ ] Processor Intensive?  Reduce bottlenecks/complexity
-
-##### Easter Basket Hunting
-- [x] Basic Ar Tracker
-- [x] Waypoint on marker
-- [x] Needs offset from marker
-- [x] Egg Detection
-- [ ] Enable/Disable Discovery
-
-#### Navigation
-- [x] Navigation Stack
-- [ ] Floating Jackal problem
-
-#### Action Library
-- [ ] Wait for goal complete, define state completeness for state transition
-- See its usage in the [congenial-couscous](https://github.com/RogerGomes29/congenial-couscous) repo.
-
-## Final Testing Checklist
-- [ ] Optimize time
-- [ ] Explore without jerkiness or collisions
-- [ ] Able to complete full map
-- [ ] State Machine performance (Changing state when desired)
-- [ ] Able to discover and save WP
-- [ ] Able to return to WP
-- [ ] Able to count eggs at WP
+```
+$ roslaunch easter_egg_hunt rviz.launch
+```
 
 # Calibration
 
