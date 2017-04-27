@@ -89,7 +89,7 @@ Press and hold X on joystick to begin hunt.
 - *Waypoints_Disabled*:  Transitions to Marker_Display_Wait after Ar Marker discovery disabled.
 - **Marker_Display_Wait**: Jackal waits for button press to detect marker.
 
-Press joystick button to enable Ar detection.
+Press joystick x button to enable Ar detection.
 
 - *Button_Pressed*: After button press, Jackal transitions to Select_Bunny state.
 - **Select_Bunny**: Jackal waits for service message that Ar Marker was detected.
