@@ -107,3 +107,7 @@ $ roslaunch easter_egg_hunt rviz.launch
 # Calibration
 
 The PlayStation3 Eye camera was calibrated using [this tutorial](http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration).
+
+# Results
+
+https://www.youtube.com/playlist?list=PLiyhIGkouc_11FCaG2WNUd6RYeX24-bG-
